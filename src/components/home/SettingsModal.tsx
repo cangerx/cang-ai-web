@@ -69,6 +69,8 @@ export function SettingsModal({ open, onClose }: Props) {
   const [creatingOrder, setCreatingOrder] = useState(false)
   const [activeOrder, setActiveOrder] = useState<any | null>(null)
   const [creditStats, setCreditStats] = useState({ subscription: 0, recharge: 0, reward: 0 })
+  const [orderHistory, setOrderHistory] = useState<any[]>([])
+  const [orderHistoryLoading, setOrderHistoryLoading] = useState(false)
   const [distApplying, setDistApplying] = useState(false)
   const [distMsg, setDistMsg] = useState<{ type: 'err' | 'ok'; msg: string } | null>(null)
 
@@ -221,9 +223,21 @@ export function SettingsModal({ open, onClose }: Props) {
     } catch {}
   }, [selectedPkgId, payMethod])
 
+  const loadOrderHistory = useCallback(async () => {
+    setOrderHistoryLoading(true)
+    try {
+      const { data } = await api.get('/billing/orders', { params: { per_page: 20 } })
+      setOrderHistory(data?.data || [])
+    } catch {}
+    setOrderHistoryLoading(false)
+  }, [])
+
   useEffect(() => {
-    if (open && settingsTab === 'credits') loadPackages()
-  }, [open, settingsTab, loadPackages])
+    if (open && settingsTab === 'credits') {
+      loadPackages()
+      loadOrderHistory()
+    }
+  }, [open, settingsTab, loadPackages, loadOrderHistory])
 
   const handleRecharge = async () => {
     if (!selectedPkgId) { toast('请选择充值套餐', 'error'); return }
@@ -712,6 +726,40 @@ export function SettingsModal({ open, onClose }: Props) {
                     </div>
 
                     <div className="usage-card">
+                      <div className="usage-card-title">充值记录</div>
+                      {orderHistoryLoading ? (
+                        <div style={{ fontSize: 12, color: '#a1a1aa' }}>加载中...</div>
+                      ) : orderHistory.length === 0 ? (
+                        <div style={{ fontSize: 12, color: '#a1a1aa' }}>暂无充值记录</div>
+                      ) : (
+                        orderHistory.map((o: any, i: number) => {
+                          const STATUS_MAP: Record<string, { label: string; color: string }> = {
+                            pending: { label: '待支付', color: '#f59e0b' },
+                            paid: { label: '已支付', color: '#16a34a' },
+                            failed: { label: '失败', color: '#ef4444' },
+                            cancelled: { label: '已取消', color: '#a1a1aa' },
+                            refunded: { label: '已退款', color: '#6b7280' },
+                          }
+                          const s = STATUS_MAP[o.status] || { label: o.status, color: '#71717a' }
+                          const dt = o.created_at ? new Date(o.created_at) : null
+                          const dateStr = dt ? `${dt.getMonth() + 1}/${dt.getDate()} ${String(dt.getHours()).padStart(2, '0')}:${String(dt.getMinutes()).padStart(2, '0')}` : ''
+                          return (
+                            <div className="usage-item" key={o.order_no || i}>
+                              <div style={{ flex: 1, minWidth: 0 }}>
+                                <div className="usage-item-desc" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                                  <span>{o.subject || `充值 ¥${o.amount}`}</span>
+                                  <span style={{ fontSize: 10, color: s.color, background: `${s.color}18`, padding: '1px 6px', borderRadius: 4, fontWeight: 600 }}>{s.label}</span>
+                                </div>
+                                <div className="usage-item-date">{dateStr}</div>
+                              </div>
+                              <div className="usage-item-amount positive">+{o.credits}</div>
+                            </div>
+                          )
+                        })
+                      )}
+                    </div>
+
+                    <div className="usage-card">
                       <div className="usage-card-title">积分使用详情</div>
                       {usageLoading ? (
                         <div style={{ fontSize: 12, color: '#a1a1aa' }}>加载中...</div>
@@ -861,8 +909,8 @@ export function SettingsModal({ open, onClose }: Props) {
       <PaymentModal
         open={!!activeOrder}
         order={activeOrder}
-        onClose={() => { setActiveOrder(null); loadProfileData() }}
-        onPaid={() => { toast('充值成功，积分已到账', 'success'); loadProfileData() }}
+        onClose={() => { setActiveOrder(null); loadProfileData(); loadOrderHistory() }}
+        onPaid={() => { toast('充值成功，积分已到账', 'success'); loadProfileData(); loadOrderHistory() }}
       />
     </div>
   )
