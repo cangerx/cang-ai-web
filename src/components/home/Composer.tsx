@@ -111,8 +111,15 @@ export function Composer() {
         imageUrl = await uploadImage(files[0])
       }
 
+      let finalPrompt = prompt.trim()
+      if (imageUrl && finalPrompt) {
+        finalPrompt = `参考上传的图片作为基础，${finalPrompt}`
+      } else if (imageUrl && !finalPrompt) {
+        finalPrompt = '参考上传的图片，生成一张风格和内容相似的图片'
+      }
+
       const { data } = await api.post('/apps/image-gen/generate', {
-        prompt: prompt.trim(),
+        prompt: finalPrompt,
         model,
         mode: imageUrl ? 'image' : 'text',
         size,
