@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: 'standalone',
   // 代理 API 请求到 Laravel 后端
   async rewrites() {
     return [
