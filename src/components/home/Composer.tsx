@@ -7,6 +7,7 @@ import { useSiteStore } from '@/stores/site'
 import { useGeneratorStore } from '@/stores/generator'
 import api from '@/lib/api'
 import { toast } from '@/components/ui/Toaster'
+import { validateFile, uploadImage, MAX_FILE_SIZE } from '@/lib/image-upload'
 
 const QUALITY_LABELS: Record<string, string> = { low: '标清 1K', medium: '高清 2K', high: '超清 4K' }
 
@@ -74,7 +75,13 @@ export function Composer() {
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selected = Array.from(e.target.files || [])
-    const merged = [...files, ...selected].slice(0, MAX_FILES)
+    const valid: File[] = []
+    for (const f of selected) {
+      const err = validateFile(f)
+      if (err) { toast(err, 'error'); continue }
+      valid.push(f)
+    }
+    const merged = [...files, ...valid].slice(0, MAX_FILES)
     setFiles(merged)
     if (fileInputRef.current) fileInputRef.current.value = ''
   }
@@ -101,12 +108,7 @@ export function Composer() {
     try {
       let imageUrl = ''
       if (mode === 'image' && files[0]) {
-        const formData = new FormData()
-        formData.append('image', files[0])
-        const { data: uploadData } = await api.post('/upload-image', formData, {
-          headers: { 'Content-Type': 'multipart/form-data' },
-        })
-        imageUrl = uploadData.url
+        imageUrl = await uploadImage(files[0])
       }
 
       const { data } = await api.post('/apps/image-gen/generate', {
@@ -131,13 +133,9 @@ export function Composer() {
     if (!files[0]) return toast('请上传图片', 'error')
     setGenerating(true)
     try {
-      const formData = new FormData()
-      formData.append('image', files[0])
-      const { data: uploadData } = await api.post('/upload-image', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      })
+      const imageUrl = await uploadImage(files[0])
       const { data } = await api.post('/reverse-prompt', {
-        image_url: uploadData.url,
+        image_url: imageUrl,
         prompt: prompt.trim() || undefined,
       })
       if (data.result) {
