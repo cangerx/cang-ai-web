@@ -2126,3 +2126,45 @@ details[open] > .section-toggle .toggle-arrow { transform: rotate(90deg); }
   .config-panel { padding-bottom: max(16px, env(safe-area-inset-bottom, 0px)); }
   .settings-modal { padding-bottom: env(safe-area-inset-bottom, 12px); }
 }
+
+/* ─── Payment Modal ─── */
+.pay-modal { position: fixed; inset: 0; z-index: 10000; display: flex; align-items: center; justify-content: center; }
+.pay-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.45); backdrop-filter: blur(6px); animation: fadeIn 0.25s; }
+.pay-sheet {
+  position: relative; z-index: 1; width: 92vw; max-width: 380px;
+  background: #fff; border-radius: 20px; padding: 24px 24px 20px;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.2);
+  animation: rise 0.3s cubic-bezier(0.22,1,0.36,1) both;
+}
+.pay-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+.pay-head h3 { margin: 0; font-size: 16px; font-weight: 700; }
+.pay-amount { text-align: center; margin-bottom: 18px; }
+.pay-amount-num { font-size: 32px; font-weight: 800; color: #111; letter-spacing: -0.02em; }
+.pay-amount-meta { font-size: 13px; color: #71717a; margin-top: 4px; }
+.pay-amount-meta b { color: #16a34a; font-weight: 700; }
+.pay-qr-wrap {
+  display: flex; align-items: center; justify-content: center;
+  padding: 16px; background: #fafafa; border-radius: 14px;
+  margin-bottom: 14px; min-height: 280px;
+}
+.pay-qr { width: 240px; height: 240px; display: block; }
+.pay-qr-empty { font-size: 12px; color: #a1a1aa; }
+.pay-tip { text-align: center; font-size: 13px; color: #52525b; margin-bottom: 10px; }
+.pay-tip b { color: #111; font-weight: 700; }
+.pay-status { display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 12px; color: #71717a; margin-bottom: 6px; }
+.pay-dot { width: 8px; height: 8px; border-radius: 50%; background: #c4c4c8; }
+.pay-dot.pending { background: #f59e0b; animation: pulseSoft 1.5s infinite; }
+.pay-dot.paid { background: #22c55e; }
+.pay-dot.failed, .pay-dot.cancelled { background: #ef4444; }
+.pay-polling { color: #a1a1aa; }
+.pay-order-no { text-align: center; font-size: 11px; color: #c4c4c8; }
+.pay-success { display: flex; flex-direction: column; align-items: center; gap: 14px; padding: 20px 0; }
+.pay-check {
+  width: 64px; height: 64px; border-radius: 50%;
+  background: #22c55e; color: #fff; font-size: 36px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  animation: rise 0.4s cubic-bezier(0.22,1,0.36,1) both;
+}
+.pay-success-text { font-size: 15px; font-weight: 600; color: #16a34a; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+

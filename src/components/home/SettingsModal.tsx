@@ -5,6 +5,7 @@ import { useAuthStore } from '@/stores/auth'
 import { useSiteStore } from '@/stores/site'
 import api from '@/lib/api'
 import { toast } from '@/components/ui/Toaster'
+import { PaymentModal } from './PaymentModal'
 
 type Panel = 'login' | 'register' | 'forgot' | 'profile'
 type LoginMethod = 'password' | 'email_code'
@@ -60,6 +61,13 @@ export function SettingsModal({ open, onClose }: Props) {
   const [inviteCodes, setInviteCodes] = useState<any[]>([])
   const [consumed, setConsumed] = useState(0)
   const [rechargeAmount, setRechargeAmount] = useState(5)
+  const [packages, setPackages] = useState<any[]>([])
+  const [selectedPkgId, setSelectedPkgId] = useState<number | null>(null)
+  const [payMethod, setPayMethod] = useState<'WECHAT' | 'ALIPAY' | 'UNIONPAY'>('WECHAT')
+  const [payMethods, setPayMethods] = useState<{ wechat: boolean; alipay: boolean; unionpay: boolean }>({ wechat: true, alipay: true, unionpay: false })
+  const [channelEnabled, setChannelEnabled] = useState<boolean>(true)
+  const [creatingOrder, setCreatingOrder] = useState(false)
+  const [activeOrder, setActiveOrder] = useState<any | null>(null)
   const [creditStats, setCreditStats] = useState({ subscription: 0, recharge: 0, reward: 0 })
   const [distApplying, setDistApplying] = useState(false)
   const [distMsg, setDistMsg] = useState<{ type: 'err' | 'ok'; msg: string } | null>(null)
@@ -190,6 +198,52 @@ export function SettingsModal({ open, onClose }: Props) {
     } catch (err: any) {
       setError({ type: 'err', msg: err.response?.data?.message || '重置失败' })
     } finally { setLoading(false) }
+  }
+
+  const loadPackages = useCallback(async () => {
+    try {
+      const { data } = await api.get('/billing/packages')
+      const items = data?.items || []
+      setPackages(items)
+      if (items.length > 0 && !selectedPkgId) setSelectedPkgId(items[0].id)
+      if (data?.channel) {
+        setChannelEnabled(!!data.channel.enabled)
+        const ms = data.channel.methods || {}
+        const next = { wechat: !!ms.wechat, alipay: !!ms.alipay, unionpay: !!ms.unionpay }
+        setPayMethods(next)
+        // 当前选中的方式被关闭时，自动切到第一个开启的
+        const currentOn = (next as any)[payMethod.toLowerCase()]
+        if (!currentOn) {
+          const first = (['WECHAT','ALIPAY','UNIONPAY'] as const).find(k => (next as any)[k.toLowerCase()])
+          if (first) setPayMethod(first)
+        }
+      }
+    } catch {}
+  }, [selectedPkgId, payMethod])
+
+  useEffect(() => {
+    if (open && settingsTab === 'credits') loadPackages()
+  }, [open, settingsTab, loadPackages])
+
+  const handleRecharge = async () => {
+    if (!selectedPkgId) { toast('请选择充值套餐', 'error'); return }
+    setCreatingOrder(true)
+    try {
+      const { data } = await api.post('/billing/orders', {
+        package_id: selectedPkgId,
+        pay_method: payMethod,
+      })
+      if (data?.ok && data.order) {
+        if (!data.order.qr_code) { toast('支付未配置或暂不可用', 'error'); return }
+        setActiveOrder(data.order)
+      } else {
+        toast(data?.msg || '创建订单失败', 'error')
+      }
+    } catch (err: any) {
+      toast(err?.response?.data?.msg || '创建订单失败', 'error')
+    } finally {
+      setCreatingOrder(false)
+    }
   }
 
   const handleRedeem = async () => {
@@ -584,18 +638,76 @@ export function SettingsModal({ open, onClose }: Props) {
 
                     <div className="recharge-card">
                       <div className="recharge-header">
-                        <span className="recharge-title">选择充值金额</span>
-                        <div className="recharge-points">{rechargeAmount * 100} <span>积分</span></div>
+                        <span className="recharge-title">选择充值套餐</span>
+                        {packages.find((p) => p.id === selectedPkgId) && (
+                          <div className="recharge-points">
+                            {packages.find((p) => p.id === selectedPkgId)?.total_credits} <span>积分</span>
+                          </div>
+                        )}
                       </div>
                       <div className="recharge-amounts">
-                        {[5, 10, 30, 50, 100].map(amt => (
-                          <button key={amt} type="button" className={`recharge-amount-btn${rechargeAmount === amt ? ' active' : ''}`} onClick={() => setRechargeAmount(amt)}>
-                            ¥ {amt}
+                        {packages.length === 0 && (
+                          <div style={{ fontSize: 12, color: '#a1a1aa', gridColumn: '1 / -1' }}>加载套餐中…</div>
+                        )}
+                        {packages.map((p) => (
+                          <button
+                            key={p.id}
+                            type="button"
+                            className={`recharge-amount-btn${selectedPkgId === p.id ? ' active' : ''}`}
+                            onClick={() => setSelectedPkgId(p.id)}
+                          >
+                            <div style={{ fontWeight: 700, fontSize: 14 }}>¥ {p.amount}</div>
+                            <div style={{ fontSize: 11, color: '#71717a', marginTop: 2 }}>
+                              {p.credits} 积分{p.bonus_credits > 0 ? ` +${p.bonus_credits}` : ''}
+                            </div>
                           </button>
                         ))}
                       </div>
-                      <button className="black-btn" type="button" style={{ width: '100%', borderRadius: 12 }}>
-                        立即充值 ¥{rechargeAmount}
+
+                      <div style={{ display: 'flex', gap: 8, margin: '12px 0' }}>
+                        {payMethods.wechat && (
+                          <button
+                            type="button"
+                            className={`recharge-amount-btn${payMethod === 'WECHAT' ? ' active' : ''}`}
+                            style={{ flex: 1 }}
+                            onClick={() => setPayMethod('WECHAT')}
+                          >微信支付</button>
+                        )}
+                        {payMethods.alipay && (
+                          <button
+                            type="button"
+                            className={`recharge-amount-btn${payMethod === 'ALIPAY' ? ' active' : ''}`}
+                            style={{ flex: 1 }}
+                            onClick={() => setPayMethod('ALIPAY')}
+                          >支付宝</button>
+                        )}
+                        {payMethods.unionpay && (
+                          <button
+                            type="button"
+                            className={`recharge-amount-btn${payMethod === 'UNIONPAY' ? ' active' : ''}`}
+                            style={{ flex: 1 }}
+                            onClick={() => setPayMethod('UNIONPAY')}
+                          >银联</button>
+                        )}
+                        {!payMethods.wechat && !payMethods.alipay && !payMethods.unionpay && (
+                          <div style={{ flex: 1, fontSize: 12, color: '#a1a1aa', padding: '10px 0', textAlign: 'center' }}>
+                            暂无可用支付方式
+                          </div>
+                        )}
+                      </div>
+
+                      <button
+                        className="black-btn"
+                        type="button"
+                        style={{ width: '100%', borderRadius: 12 }}
+                        disabled={creatingOrder || !selectedPkgId || !channelEnabled || !(payMethods.wechat || payMethods.alipay || payMethods.unionpay)}
+                        onClick={handleRecharge}
+                      >
+                        {!channelEnabled
+                          ? '支付暂不可用'
+                          : creatingOrder
+                            ? '创建订单中…'
+                            : `立即充值 ¥${packages.find((p) => p.id === selectedPkgId)?.amount || ''}`}
                       </button>
                     </div>
 
@@ -746,6 +858,12 @@ export function SettingsModal({ open, onClose }: Props) {
 
         </div>
       </div>
+      <PaymentModal
+        open={!!activeOrder}
+        order={activeOrder}
+        onClose={() => { setActiveOrder(null); loadProfileData() }}
+        onPaid={() => { toast('充值成功，积分已到账', 'success'); loadProfileData() }}
+      />
     </div>
   )
 }
