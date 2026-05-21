@@ -71,12 +71,13 @@ export async function uploadImage(file: File): Promise<string> {
 
     if (presign.direct) {
       // 直传 OSS
-      await fetch(presign.url, {
+      const resp = await fetch(presign.url, {
         method: presign.method || 'PUT',
         headers: presign.headers || { 'Content-Type': compressed.type },
         body: compressed,
       })
-      return presign.final_url
+      if (resp.ok) return presign.final_url
+      // 直传失败，降级到后端中转
     }
   } catch {
     // 预签名失败，降级到后端中转
