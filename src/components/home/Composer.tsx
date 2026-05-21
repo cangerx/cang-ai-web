@@ -59,6 +59,15 @@ export function Composer() {
   const modelName = currentModelConfig?.name || model || '模型'
   const configLabel = `${modelName} | ${size === 'auto' ? '自动' : size} | ${QUALITY_LABELS[quality] || quality} | ${count}张`
 
+  const costPerImage = useMemo(() => {
+    if (!config?.billing_rules?.length) return config?.cost_per_generation || 1
+    const rule = config.billing_rules.find((r) =>
+      (r.model === '*' || r.model === model) && (r.quality === '*' || r.quality === quality)
+    ) || config.billing_rules.find((r) => r.model === '*' && r.quality === '*')
+    return rule?.credits || config?.cost_per_generation || 1
+  }, [config, model, quality])
+  const totalCost = costPerImage * count
+
   const handlePromptTool = async (kind: 'optimize' | 'translate') => {
     if (!prompt.trim()) return toast('请先输入提示词', 'error')
     setToolLoading(true)
@@ -357,7 +366,7 @@ export function Composer() {
               disabled={generating}
               onClick={handleGenerate}
             >
-              {generating ? '生成中' : '生成'}
+              {generating ? '生成中' : `生成 · ${totalCost}积分`}
             </button>
           </div>
         </div>
