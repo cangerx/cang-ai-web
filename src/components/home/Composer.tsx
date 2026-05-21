@@ -64,7 +64,7 @@ export function Composer() {
     setToolLoading(true)
     try {
       const { data } = await api.post('/prompt-tool', { kind, prompt })
-      if (data.result) setPrompt(data.result)
+      if (data.prompt) setPrompt(data.prompt)
       toast(kind === 'optimize' ? '优化完成' : '翻译完成', 'success')
     } catch {
       toast('操作失败', 'error')
@@ -114,11 +114,12 @@ export function Composer() {
       const { data } = await api.post('/apps/image-gen/generate', {
         prompt: prompt.trim(),
         model,
+        mode: imageUrl ? 'image' : 'text',
         size,
         quality,
         count,
         public: isPublic,
-        image_url: imageUrl || undefined,
+        file_urls: imageUrl ? [imageUrl] : undefined,
       })
 
       setActiveTaskId(data.task_id)
