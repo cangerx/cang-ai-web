@@ -3,6 +3,8 @@ import api from '@/lib/api'
 
 export interface SiteConfig {
   site_name: string
+  site_description?: string
+  site_keywords?: string
   announcement: string
   prompt_tool_model: string
   reverse_prompt_model: string
@@ -14,6 +16,8 @@ export interface SiteConfig {
   footer_text?: string
   footer_icp?: string
   footer_links?: Array<{ label: string; url: string }>
+  hero_title?: string
+  hero_subtitle?: string
 }
 
 interface SiteState {
