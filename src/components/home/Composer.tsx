@@ -452,7 +452,7 @@ export function Composer() {
               <button
                 className={`black-btn${generating ? ' loading' : ''}`}
                 type="button"
-                disabled={generating}
+                disabled={generating || reversing}
                 onClick={handleGenerate}
               >
                 {generating ? '生成中' : `生成 · ${totalCost}积分`}

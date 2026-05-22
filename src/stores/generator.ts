@@ -35,7 +35,12 @@ export const useGeneratorStore = create<GeneratorState>((set) => ({
   activeTaskId: null,
   generating: false,
 
-  setMode: (mode) => set({ mode }),
+  setMode: (mode) => set((state) => {
+    let files = state.files
+    if (mode === 'text') files = []
+    else if (mode === 'reverse' && files.length > 1) files = files.slice(0, 1)
+    return { mode, files }
+  }),
   setModel: (model) => set({ model }),
   setSize: (size) => set({ size }),
   setQuality: (quality) => set({ quality }),
