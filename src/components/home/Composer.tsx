@@ -90,7 +90,8 @@ export function Composer() {
       if (err) { toast(err, 'error'); continue }
       valid.push(f)
     }
-    const merged = [...files, ...valid].slice(0, MAX_FILES)
+    const currentMax = mode === 'reverse' ? 1 : MAX_FILES
+    const merged = [...files, ...valid].slice(0, currentMax)
     setFiles(merged)
     if (fileInputRef.current) fileInputRef.current.value = ''
   }
@@ -122,7 +123,8 @@ export function Composer() {
         const { setMode } = useGeneratorStore.getState()
         setMode('image')
       }
-      const merged = [...files, ...imageFiles].slice(0, MAX_FILES)
+      const limit = mode === 'text' ? MAX_FILES : (mode === 'reverse' ? 1 : MAX_FILES)
+      const merged = [...files, ...imageFiles].slice(0, limit)
       setFiles(merged)
       toast(`已粘贴 ${imageFiles.length} 张图片`, 'success')
     }
@@ -226,7 +228,8 @@ export function Composer() {
   }
 
   const showUpload = mode === 'image' || mode === 'reverse'
-  const isFull = files.length >= MAX_FILES
+  const maxFiles = mode === 'reverse' ? 1 : MAX_FILES
+  const isFull = files.length >= maxFiles
   const chipClass = `upload-chip${files.length > 0 ? ' has-files' : ''}${isFull ? ' is-full' : ''}`
 
   return (
@@ -263,12 +266,12 @@ export function Composer() {
                   </div>
                 ))}
               </div>
-              <label className={chipClass}>
+              {!isFull && <label className={chipClass}>
                 <input
                   ref={fileInputRef}
                   type="file"
                   accept="image/*"
-                  multiple
+                  multiple={mode !== 'reverse'}
                   onChange={handleFileChange}
                   disabled={isFull}
                 />
@@ -281,8 +284,8 @@ export function Composer() {
                   </svg>
                 </span>
                 <span className="upload-label">添加图片</span>
-                <span className="upload-meta">最多 {MAX_FILES} 张</span>
-              </label>
+                <span className="upload-meta">最多 {maxFiles} 张</span>
+              </label>}
             </div>
           )}
         </div>
