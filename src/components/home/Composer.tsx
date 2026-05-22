@@ -103,6 +103,31 @@ export function Composer() {
     }, 180)
   }
 
+  const handlePaste = (e: React.ClipboardEvent) => {
+    const items = Array.from(e.clipboardData?.items || [])
+    const imageFiles: File[] = []
+    for (const item of items) {
+      if (item.type.startsWith('image/')) {
+        const file = item.getAsFile()
+        if (file) {
+          const err = validateFile(file)
+          if (err) { toast(err, 'error'); continue }
+          imageFiles.push(file)
+        }
+      }
+    }
+    if (imageFiles.length > 0) {
+      e.preventDefault()
+      if (mode === 'text') {
+        const { setMode } = useGeneratorStore.getState()
+        setMode('image')
+      }
+      const merged = [...files, ...imageFiles].slice(0, MAX_FILES)
+      setFiles(merged)
+      toast(`已粘贴 ${imageFiles.length} 张图片`, 'success')
+    }
+  }
+
   const handleThumbHover = (e: React.MouseEvent, url: string) => {
     const rect = (e.currentTarget as HTMLElement).getBoundingClientRect()
     setHoverPreview({ url, x: rect.left + rect.width / 2, y: rect.top })
@@ -216,6 +241,7 @@ export function Composer() {
             className={`prompt${showUpload && files.length > 0 ? ' has-upload' : ''}`}
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
+            onPaste={handlePaste}
             placeholder={
               mode === 'reverse' ? '（可选）自定义反推指令' :
               mode === 'image' ? '描述你想要的图片效果' :
