@@ -2,11 +2,10 @@ import type { Metadata } from 'next'
 import './globals.css'
 import { Toaster } from '@/components/ui/Toaster'
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
-
 export async function generateMetadata(): Promise<Metadata> {
+  const serverApiUrl = process.env.API_URL || process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1'
   try {
-    const res = await fetch(`${API_URL}/api/config`, {
+    const res = await fetch(`${serverApiUrl}/api/config`, {
       next: { revalidate: 60 },
     })
     if (res.ok) {

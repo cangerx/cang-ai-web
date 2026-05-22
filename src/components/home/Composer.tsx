@@ -7,7 +7,7 @@ import { useSiteStore } from '@/stores/site'
 import { useGeneratorStore } from '@/stores/generator'
 import api from '@/lib/api'
 import { toast } from '@/components/ui/Toaster'
-import { validateFile, uploadImage, compressImage, MAX_FILE_SIZE } from '@/lib/image-upload'
+import { validateFile, uploadImage, MAX_FILE_SIZE } from '@/lib/image-upload'
 
 const QUALITY_LABELS: Record<string, string> = { low: '标清 1K', medium: '高清 2K', high: '超清 4K' }
 
@@ -146,20 +146,36 @@ export function Composer() {
     }
   }
 
-  const fileToBase64 = (file: File): Promise<string> =>
+  const imageToBase64 = (file: File, maxWidth = 1024, quality = 0.8): Promise<string> =>
     new Promise((resolve, reject) => {
-      const reader = new FileReader()
-      reader.onload = () => resolve(reader.result as string)
-      reader.onerror = reject
-      reader.readAsDataURL(file)
+      const img = new Image()
+      const url = URL.createObjectURL(file)
+      img.onload = () => {
+        URL.revokeObjectURL(url)
+        let { width, height } = img
+        if (width > maxWidth) {
+          height = Math.round(height * (maxWidth / width))
+          width = maxWidth
+        }
+        const canvas = document.createElement('canvas')
+        canvas.width = width
+        canvas.height = height
+        const ctx = canvas.getContext('2d')!
+        ctx.drawImage(img, 0, 0, width, height)
+        resolve(canvas.toDataURL('image/jpeg', quality))
+      }
+      img.onerror = () => {
+        URL.revokeObjectURL(url)
+        reject(new Error('图片读取失败'))
+      }
+      img.src = url
     })
 
   const handleReverse = async () => {
     if (!files[0]) return toast('请上传图片', 'error')
     setGenerating(true)
     try {
-      const compressed = await compressImage(files[0], 1024, 0.8)
-      const base64 = await fileToBase64(compressed)
+      const base64 = await imageToBase64(files[0])
       const { data } = await api.post('/reverse-prompt', {
         image_url: base64,
         prompt: prompt.trim() || undefined,
@@ -170,8 +186,9 @@ export function Composer() {
       } else {
         toast(data.error || '反推失败', 'error')
       }
-    } catch {
-      toast('反推失败', 'error')
+    } catch (err: any) {
+      const msg = err?.response?.data?.error || err?.response?.data?.message || '反推失败'
+      toast(msg, 'error')
     } finally {
       setGenerating(false)
     }
