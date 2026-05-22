@@ -209,7 +209,18 @@ export function Composer() {
       })
       if (data.prompt) {
         setPrompt(data.prompt)
-        toast('反推完成', 'success')
+        setFiles([])
+        const { setMode } = useGeneratorStore.getState()
+        setMode('text')
+        toast('反推完成，提示词已填入', 'success')
+        requestAnimationFrame(() => {
+          const el = document.getElementById('prompt')
+          if (el) {
+            el.classList.add('highlight-pulse')
+            el.focus()
+            setTimeout(() => el.classList.remove('highlight-pulse'), 1500)
+          }
+        })
       } else {
         toast(data.error || '反推失败', 'error')
       }
