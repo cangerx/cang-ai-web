@@ -6,7 +6,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const serverApiUrl = process.env.API_URL || process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1'
   try {
     const res = await fetch(`${serverApiUrl}/api/config`, {
-      next: { revalidate: 60 },
+      cache: 'no-store',
     })
     if (res.ok) {
       const data = await res.json()
