@@ -108,7 +108,7 @@ export default function HomePage() {
       <AnnounceBar />
       <section className="hero">
         <HeroLogin />
-        <h1>{config?.site_name || 'CANG-AI 绘图'}</h1>
+        <h1>{config?.hero_title || config?.site_name || 'Visionary AI'}</h1>
       </section>
 
       <section id="workspace" className="workspace">

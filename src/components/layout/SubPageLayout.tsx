@@ -25,7 +25,7 @@ export function SubPageLayout({ children, narrow = false, hideBack = false }: Pr
     if (!config) fetchConfig()
   }, [config, fetchConfig])
 
-  const siteName = config?.site_name || 'CANG-AI'
+  const siteName = config?.site_name || 'Visionary AI'
   const initial = (user?.nickname || user?.name || 'U').charAt(0).toUpperCase()
 
   return (

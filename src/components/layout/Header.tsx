@@ -19,7 +19,7 @@ export function Header() {
       <div className="max-w-[1080px] mx-auto px-6 h-14 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2 font-bold text-lg text-gray-900">
           <Sparkles className="w-5 h-5 text-accent" />
-          CANG-AI
+          {config?.site_name || 'Visionary AI'}
         </Link>
 
         <nav className="flex items-center gap-4">

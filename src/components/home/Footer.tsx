@@ -4,7 +4,7 @@ import { useSiteStore } from '@/stores/site'
 
 export function Footer() {
   const { config } = useSiteStore()
-  const siteName = config?.site_name || 'CANG-AI'
+  const siteName = config?.site_name || 'Visionary AI'
 
   return (
     <footer className="footer">
@@ -15,7 +15,7 @@ export function Footer() {
           <span className="footer-brand-text">{siteName}</span>
         </div>
         <div className="footer-links">
-          <a href="mailto:support@cang-ai.com">联系我们</a>
+          <a href="/terms" target="_blank">联系我们</a>
           <span className="dot">&middot;</span>
           <a href="/terms" target="_blank">服务条款</a>
           <span className="dot">&middot;</span>

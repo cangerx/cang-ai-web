@@ -5,7 +5,7 @@ export default function TermsPage() {
       <p className="text-gray-500">最后更新：2024年1月</p>
 
       <h2>1. 服务说明</h2>
-      <p>CANG-AI 提供 AI 图片生成服务。用户通过文字描述或参考图片，使用平台提供的 AI 模型生成图片内容。</p>
+      <p>本平台提供 AI 图片生成服务。用户通过文字描述或参考图片，使用平台提供的 AI 模型生成图片内容。</p>
 
       <h2>2. 用户责任</h2>
       <ul>
