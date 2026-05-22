@@ -90,8 +90,7 @@ export function Composer() {
       if (err) { toast(err, 'error'); continue }
       valid.push(f)
     }
-    const currentMax = mode === 'reverse' ? 1 : MAX_FILES
-    const merged = [...files, ...valid].slice(0, currentMax)
+    const merged = [...files, ...valid].slice(0, MAX_FILES)
     setFiles(merged)
     if (fileInputRef.current) fileInputRef.current.value = ''
   }
@@ -123,8 +122,7 @@ export function Composer() {
         const { setMode } = useGeneratorStore.getState()
         setMode('image')
       }
-      const limit = mode === 'text' ? MAX_FILES : (mode === 'reverse' ? 1 : MAX_FILES)
-      const merged = [...files, ...imageFiles].slice(0, limit)
+      const merged = [...files, ...imageFiles].slice(0, MAX_FILES)
       setFiles(merged)
       toast(`已粘贴 ${imageFiles.length} 张图片`, 'success')
     }
@@ -137,7 +135,6 @@ export function Composer() {
 
   const handleGenerate = async () => {
     if (!user) return toast('请先登录', 'error')
-    if (mode === 'reverse') return handleReverse()
     if (!prompt.trim() && mode === 'text') return toast('请输入提示词', 'error')
     setGenerating(true)
 
@@ -209,9 +206,6 @@ export function Composer() {
       })
       if (data.prompt) {
         setPrompt(data.prompt)
-        setFiles([])
-        const { setMode } = useGeneratorStore.getState()
-        setMode('text')
         toast('反推完成，提示词已填入', 'success')
         requestAnimationFrame(() => {
           const el = document.getElementById('prompt')
@@ -238,9 +232,8 @@ export function Composer() {
     setGenerating(false)
   }
 
-  const showUpload = mode === 'image' || mode === 'reverse'
-  const maxFiles = mode === 'reverse' ? 1 : MAX_FILES
-  const isFull = files.length >= maxFiles
+  const showUpload = mode === 'image'
+  const isFull = files.length >= MAX_FILES
   const chipClass = `upload-chip${files.length > 0 ? ' has-files' : ''}${isFull ? ' is-full' : ''}`
 
   return (
@@ -282,7 +275,7 @@ export function Composer() {
                   ref={fileInputRef}
                   type="file"
                   accept="image/*"
-                  multiple={mode !== 'reverse'}
+                  multiple
                   onChange={handleFileChange}
                   disabled={isFull}
                 />
@@ -295,14 +288,22 @@ export function Composer() {
                   </svg>
                 </span>
                 <span className="upload-label">添加图片</span>
-                <span className="upload-meta">最多 {maxFiles} 张</span>
+                <span className="upload-meta">最多 {MAX_FILES} 张</span>
               </label>}
             </div>
           )}
         </div>
 
-        {mode !== 'reverse' && (
-          <div className="prompt-actions">
+        <div className="prompt-actions">{mode === 'image' && files.length > 0 && (
+            <button
+              className="mini-ghost-btn"
+              type="button"
+              disabled={generating}
+              onClick={handleReverse}
+            >
+              ↻ 反推提示词
+            </button>
+          )}
             <button
               className="mini-ghost-btn"
               type="button"
@@ -320,12 +321,10 @@ export function Composer() {
               ⇄ 翻译
             </button>
           </div>
-        )}
 
         {/* 底部工具栏：配置 + 生成按钮 */}
         <div className="toolbar">
           <div className="toolbar-left">
-            {mode !== 'reverse' && (
               <div className={`config-wrap${configOpen ? ' open' : ''}`}>
                 <button
                   className="config-btn"
@@ -412,7 +411,6 @@ export function Composer() {
                   </div>
                 </div>
               </div>
-            )}
           </div>
 
           <div className="toolbar-right">
@@ -432,7 +430,7 @@ export function Composer() {
               disabled={generating}
               onClick={handleGenerate}
             >
-              {generating ? (mode === 'reverse' ? '反推中' : '生成中') : mode === 'reverse' ? '反推提示词' : `生成 · ${totalCost}积分`}
+              {generating ? '生成中' : `生成 · ${totalCost}积分`}
             </button>
           </div>
         </div>
