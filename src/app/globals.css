@@ -392,7 +392,7 @@ body::after {
   to   { opacity: 1; transform: translateY(0) scale(1); }
 }
 
-.thumbs { display: grid; grid-template-columns: repeat(4, 48px); gap: 8px; min-width: 0; flex: 0 0 auto; }
+.thumbs { display: flex; flex-wrap: wrap; gap: 8px; min-width: 0; flex: 0 0 auto; }
 .thumbs:empty { display: none; }
 
 .upload-chip {
@@ -2060,7 +2060,7 @@ details[open] > .section-toggle .toggle-arrow { transform: rotate(90deg); }
   .prompt.has-upload { min-height: 96px; }
   .prompt-actions { gap: 8px; }
   .thumb-row { width: fit-content; gap: 5px; padding: 5px; }
-  .thumbs { grid-template-columns: repeat(4, 48px); gap: 5px; }
+  .thumbs { gap: 5px; }
   .upload-chip { width: 48px; height: 48px; min-height: 48px; flex-basis: 48px; }
   .thumb { height: 48px; }
   .upload-chip, .thumb { border-radius: 10px; }
@@ -2102,7 +2102,7 @@ details[open] > .section-toggle .toggle-arrow { transform: rotate(90deg); }
   .prompt.has-upload { min-height: 92px; }
   .prompt-actions { gap: 6px; margin-top: 8px; }
   .thumb-row { width: fit-content; gap: 4px; padding: 4px; }
-  .thumbs { grid-template-columns: repeat(4, 44px); gap: 4px; }
+  .thumbs { gap: 4px; }
   .thumb, .upload-chip { height: 46px; min-height: 46px; }
   .upload-chip { width: 44px; flex-basis: 44px; }
   .upload-chip, .thumb { border-radius: 8px; }

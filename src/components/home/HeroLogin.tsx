@@ -2,11 +2,12 @@
 
 import { useEffect, useState, useRef } from 'react'
 import { useAuthStore } from '@/stores/auth'
+import { useUIStore } from '@/stores/ui'
 import { SettingsModal } from './SettingsModal'
 
 export function HeroLogin() {
   const { user, token, hydrate, fetchMe } = useAuthStore()
-  const [modalOpen, setModalOpen] = useState(false)
+  const { settingsOpen, openSettings, closeSettings } = useUIStore()
   const [showCredits, setShowCredits] = useState(false)
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null)
   const labelRef = useRef<HTMLSpanElement>(null)
@@ -34,7 +35,7 @@ export function HeroLogin() {
 
   return (
     <>
-      <button className="hero-login" type="button" onClick={() => setModalOpen(true)}>
+      <button className="hero-login" type="button" onClick={openSettings}>
         {user ? (
           user.avatar_url ? (
             // eslint-disable-next-line @next/next/no-img-element
@@ -54,7 +55,7 @@ export function HeroLogin() {
           {displayText}
         </span>
       </button>
-      <SettingsModal open={modalOpen} onClose={() => setModalOpen(false)} />
+      <SettingsModal open={settingsOpen} onClose={closeSettings} />
     </>
   )
 }

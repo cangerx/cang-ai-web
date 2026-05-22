@@ -5,6 +5,7 @@ import { createPortal } from 'react-dom'
 import { useAuthStore } from '@/stores/auth'
 import { useSiteStore } from '@/stores/site'
 import { useGeneratorStore } from '@/stores/generator'
+import { useUIStore } from '@/stores/ui'
 import api from '@/lib/api'
 import { toast } from '@/components/ui/Toaster'
 import { validateFile, uploadImage } from '@/lib/image-upload'
@@ -136,8 +137,15 @@ export function Composer() {
     setHoverPreview({ url, x: rect.left + rect.width / 2, y: rect.top })
   }
 
+  const { openSettings } = useUIStore()
+
   const handleGenerate = async () => {
-    if (!user) return toast('请先登录', 'error')
+    if (!user) { openSettings(); return }
+    if ((user.credits ?? 0) < totalCost) {
+      toast('积分不足，请充值', 'error')
+      openSettings()
+      return
+    }
     if (!prompt.trim() && mode === 'text') return toast('请输入提示词', 'error')
     setGenerating(true)
 
@@ -207,7 +215,7 @@ export function Composer() {
 
   const handleReverse = async () => {
     if (!files[0]) return toast('请上传图片', 'error')
-    if (!user) return toast('请先登录', 'error')
+    if (!user) { openSettings(); return }
     setReversing(true)
     try {
       const base64 = await imageToBase64(files[0])
