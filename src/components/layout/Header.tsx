@@ -16,17 +16,17 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-40 backdrop-blur-xl bg-white/70 border-b border-black/5">
-      <div className="max-w-[1080px] mx-auto px-6 h-14 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2 font-bold text-lg text-gray-900">
-          <Sparkles className="w-5 h-5 text-accent" />
-          {config?.site_name || 'Visionary AI'}
+      <div className="max-w-[1080px] mx-auto px-4 sm:px-6 h-14 flex items-center justify-between gap-3">
+        <Link href="/" className="min-w-0 flex items-center gap-2 font-bold text-base sm:text-lg text-gray-900">
+          <Sparkles className="w-5 h-5 text-accent flex-shrink-0" />
+          <span className="truncate">{config?.site_name || 'Visionary AI'}</span>
         </Link>
 
-        <nav className="flex items-center gap-4">
-          <Link href="/explore" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">
+        <nav className="flex items-center gap-2 sm:gap-4 flex-shrink-0">
+          <Link href="/explore" className="hidden sm:inline text-sm text-gray-600 hover:text-gray-900 transition-colors">
             灵感广场
           </Link>
-          <Link href="/templates" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">
+          <Link href="/templates" className="hidden sm:inline text-sm text-gray-600 hover:text-gray-900 transition-colors">
             提示词模板
           </Link>
 
@@ -34,10 +34,10 @@ export function Header() {
             <div className="flex items-center gap-3">
               <Link
                 href="/profile"
-                className="flex items-center gap-1.5 text-sm text-gray-600 hover:text-gray-900"
+                className="flex items-center gap-1.5 text-sm text-gray-600 hover:text-gray-900 min-w-0"
               >
-                <User className="w-4 h-4" />
-                <span className="max-w-[80px] truncate">{user.nickname || user.name}</span>
+                <User className="w-4 h-4 flex-shrink-0" />
+                <span className="hidden sm:inline max-w-[72px] sm:max-w-[80px] truncate">{user.nickname || user.name}</span>
                 <span className="text-xs text-accent font-medium">{user.credits}</span>
               </Link>
               <button
