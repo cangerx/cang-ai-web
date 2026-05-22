@@ -4,7 +4,8 @@ import { useGeneratorStore } from '@/stores/generator'
 
 const MODES = [
   { key: 'text' as const, title: '图像生成', sub: '全能图像模型' },
-  { key: 'image' as const, title: '参考图生成', sub: '支持组图 / 反推提示词' },
+  { key: 'image' as const, title: '参考图生成', sub: '支持组图生成' },
+  { key: 'reverse' as const, title: '提示词反推', sub: '图片反推提示词' },
 ]
 
 export function ModeCards() {

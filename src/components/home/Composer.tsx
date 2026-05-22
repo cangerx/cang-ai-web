@@ -91,7 +91,8 @@ export function Composer() {
       if (err) { toast(err, 'error'); continue }
       valid.push(f)
     }
-    const merged = [...files, ...valid].slice(0, MAX_FILES)
+    const currentMax = mode === 'reverse' ? 1 : MAX_FILES
+    const merged = [...files, ...valid].slice(0, currentMax)
     setFiles(merged)
     if (fileInputRef.current) fileInputRef.current.value = ''
   }
@@ -123,7 +124,8 @@ export function Composer() {
         const { setMode } = useGeneratorStore.getState()
         setMode('image')
       }
-      const merged = [...files, ...imageFiles].slice(0, MAX_FILES)
+      const limit = mode === 'reverse' ? 1 : MAX_FILES
+      const merged = [...files, ...imageFiles].slice(0, limit)
       setFiles(merged)
       toast(`已粘贴 ${imageFiles.length} 张图片`, 'success')
     }
@@ -234,8 +236,9 @@ export function Composer() {
     setGenerating(false)
   }
 
-  const showUpload = mode === 'image'
-  const isFull = files.length >= MAX_FILES
+  const showUpload = mode === 'image' || mode === 'reverse'
+  const maxFiles = mode === 'reverse' ? 1 : MAX_FILES
+  const isFull = files.length >= maxFiles
   const chipClass = `upload-chip${files.length > 0 ? ' has-files' : ''}${isFull ? ' is-full' : ''}`
 
   return (
@@ -277,7 +280,7 @@ export function Composer() {
                   ref={fileInputRef}
                   type="file"
                   accept="image/*"
-                  multiple
+                  multiple={mode !== 'reverse'}
                   onChange={handleFileChange}
                   disabled={isFull}
                 />
@@ -290,22 +293,14 @@ export function Composer() {
                   </svg>
                 </span>
                 <span className="upload-label">添加图片</span>
-                <span className="upload-meta">最多 {MAX_FILES} 张</span>
+                <span className="upload-meta">最多 {maxFiles} 张</span>
               </label>}
             </div>
           )}
         </div>
 
-        <div className="prompt-actions">{mode === 'image' && files.length > 0 && (
-            <button
-              className="mini-ghost-btn"
-              type="button"
-              disabled={reversing}
-              onClick={handleReverse}
-            >
-              {reversing ? '反推中...' : '↻ 反推提示词'}
-            </button>
-          )}
+        {mode !== 'reverse' && (
+          <div className="prompt-actions">
             <button
               className="mini-ghost-btn"
               type="button"
@@ -323,10 +318,12 @@ export function Composer() {
               ⇄ 翻译
             </button>
           </div>
+        )}
 
         {/* 底部工具栏：配置 + 生成按钮 */}
         <div className="toolbar">
           <div className="toolbar-left">
+            {mode !== 'reverse' && (
               <div className={`config-wrap${configOpen ? ' open' : ''}`}>
                 <button
                   className="config-btn"
@@ -413,6 +410,7 @@ export function Composer() {
                   </div>
                 </div>
               </div>
+            )}
           </div>
 
           <div className="toolbar-right">
@@ -426,14 +424,25 @@ export function Composer() {
               <span>公开</span>
             </label>
             <button className="icon-btn" type="button" aria-label="清空" onClick={handleClear}>⟲</button>
-            <button
-              className={`black-btn${generating ? ' loading' : ''}`}
-              type="button"
-              disabled={generating}
-              onClick={handleGenerate}
-            >
-              {generating ? '生成中' : `生成 · ${totalCost}积分`}
-            </button>
+            {mode === 'reverse' ? (
+              <button
+                className={`black-btn${reversing ? ' loading' : ''}`}
+                type="button"
+                disabled={reversing || !files.length}
+                onClick={handleReverse}
+              >
+                {reversing ? '反推中' : '反推提示词'}
+              </button>
+            ) : (
+              <button
+                className={`black-btn${generating ? ' loading' : ''}`}
+                type="button"
+                disabled={generating}
+                onClick={handleGenerate}
+              >
+                {generating ? '生成中' : `生成 · ${totalCost}积分`}
+              </button>
+            )}
           </div>
         </div>
       </div>
