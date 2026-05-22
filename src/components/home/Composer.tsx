@@ -7,7 +7,7 @@ import { useSiteStore } from '@/stores/site'
 import { useGeneratorStore } from '@/stores/generator'
 import api from '@/lib/api'
 import { toast } from '@/components/ui/Toaster'
-import { validateFile, uploadImage, MAX_FILE_SIZE } from '@/lib/image-upload'
+import { validateFile, uploadImage, compressImage, MAX_FILE_SIZE } from '@/lib/image-upload'
 
 const QUALITY_LABELS: Record<string, string> = { low: '标清 1K', medium: '高清 2K', high: '超清 4K' }
 
@@ -146,13 +146,22 @@ export function Composer() {
     }
   }
 
+  const fileToBase64 = (file: File): Promise<string> =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader()
+      reader.onload = () => resolve(reader.result as string)
+      reader.onerror = reject
+      reader.readAsDataURL(file)
+    })
+
   const handleReverse = async () => {
     if (!files[0]) return toast('请上传图片', 'error')
     setGenerating(true)
     try {
-      const imageUrl = await uploadImage(files[0])
+      const compressed = await compressImage(files[0], 1024, 0.8)
+      const base64 = await fileToBase64(compressed)
       const { data } = await api.post('/reverse-prompt', {
-        image_url: imageUrl,
+        image_url: base64,
         prompt: prompt.trim() || undefined,
       })
       if (data.prompt) {
