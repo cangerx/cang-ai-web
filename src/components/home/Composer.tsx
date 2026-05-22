@@ -366,7 +366,7 @@ export function Composer() {
               disabled={generating}
               onClick={handleGenerate}
             >
-              {generating ? '生成中' : `生成 · ${totalCost}积分`}
+              {generating ? (mode === 'reverse' ? '反推中' : '生成中') : mode === 'reverse' ? '反推提示词' : `生成 · ${totalCost}积分`}
             </button>
           </div>
         </div>
