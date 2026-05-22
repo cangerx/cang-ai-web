@@ -38,6 +38,7 @@ export function Composer() {
 
   const [configOpen, setConfigOpen] = useState(false)
   const [toolLoading, setToolLoading] = useState(false)
+  const [reversing, setReversing] = useState(false)
   const [isPublic, setIsPublic] = useState(true)
   const [removingIdx, setRemovingIdx] = useState<number | null>(null)
   const [hoverPreview, setHoverPreview] = useState<{ url: string; x: number; y: number } | null>(null)
@@ -197,7 +198,8 @@ export function Composer() {
 
   const handleReverse = async () => {
     if (!files[0]) return toast('请上传图片', 'error')
-    setGenerating(true)
+    if (!user) return toast('请先登录', 'error')
+    setReversing(true)
     try {
       const base64 = await imageToBase64(files[0])
       const { data } = await api.post('/reverse-prompt', {
@@ -222,7 +224,7 @@ export function Composer() {
       const msg = err?.response?.data?.error || err?.response?.data?.message || '反推失败'
       toast(msg, 'error')
     } finally {
-      setGenerating(false)
+      setReversing(false)
     }
   }
 
@@ -298,10 +300,10 @@ export function Composer() {
             <button
               className="mini-ghost-btn"
               type="button"
-              disabled={generating}
+              disabled={reversing}
               onClick={handleReverse}
             >
-              ↻ 反推提示词
+              {reversing ? '反推中...' : '↻ 反推提示词'}
             </button>
           )}
             <button
