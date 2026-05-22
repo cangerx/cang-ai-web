@@ -155,8 +155,8 @@ export function Composer() {
         image_url: imageUrl,
         prompt: prompt.trim() || undefined,
       })
-      if (data.result) {
-        setPrompt(data.result)
+      if (data.prompt) {
+        setPrompt(data.prompt)
         toast('反推完成', 'success')
       } else {
         toast(data.error || '反推失败', 'error')
