@@ -152,7 +152,18 @@ export function Composer() {
     try {
       let imageUrl = ''
       if (mode === 'image' && files[0]) {
-        imageUrl = await uploadImage(files[0])
+        try {
+          imageUrl = await uploadImage(files[0])
+        } catch (uploadErr: any) {
+          toast(uploadErr?.response?.data?.message || '图片上传失败，请重试', 'error')
+          setGenerating(false)
+          return
+        }
+        if (!imageUrl) {
+          toast('图片上传失败，请重试', 'error')
+          setGenerating(false)
+          return
+        }
       }
 
       let finalPrompt = prompt.trim()
