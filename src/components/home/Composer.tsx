@@ -106,31 +106,63 @@ export function Composer() {
     }, 180)
   }
 
-  const handlePaste = (e: React.ClipboardEvent) => {
-    const items = Array.from(e.clipboardData?.items || [])
-    const imageFiles: File[] = []
-    for (const item of items) {
-      if (item.type.startsWith('image/')) {
-        const file = item.getAsFile()
-        if (file) {
-          const err = validateFile(file)
-          if (err) { toast(err, 'error'); continue }
-          imageFiles.push(file)
-        }
-      }
+  const addImageFiles = (incoming: File[]) => {
+    const valid: File[] = []
+    for (const f of incoming) {
+      const err = validateFile(f)
+      if (err) { toast(err, 'error'); continue }
+      valid.push(f)
     }
-    if (imageFiles.length > 0) {
+    if (!valid.length) return false
+    const nextMode = mode === 'text' ? 'image' : mode
+    if (mode === 'text') {
+      const { setMode } = useGeneratorStore.getState()
+      setMode('image')
+    }
+    const limit = nextMode === 'reverse' ? 1 : MAX_FILES
+    const available = Math.max(limit - files.length, 0)
+    if (available <= 0) {
+      toast(`最多只能添加 ${limit} 张图片`, 'error')
+      return true
+    }
+    const accepted = valid.slice(0, available)
+    setFiles([...files, ...accepted])
+    toast(`已添加 ${accepted.length} 张图片`, 'success')
+    return true
+  }
+
+  const filesFromClipboard = (clipboardData: DataTransfer | null): File[] => {
+    if (!clipboardData) return []
+    const fromItems = Array.from(clipboardData.items || [])
+      .filter((item) => item.type.startsWith('image/'))
+      .map((item) => item.getAsFile())
+      .filter((file): file is File => Boolean(file))
+    const fromFiles = Array.from(clipboardData.files || []).filter((file) => file.type.startsWith('image/'))
+    return [...fromItems, ...fromFiles].filter((file, index, arr) =>
+      arr.findIndex((f) => f.name === file.name && f.size === file.size && f.lastModified === file.lastModified) === index
+    )
+  }
+
+  const handlePaste = (e: React.ClipboardEvent) => {
+    const imageFiles = filesFromClipboard(e.clipboardData)
+    if (imageFiles.length > 0 && addImageFiles(imageFiles)) {
       e.preventDefault()
-      if (mode === 'text') {
-        const { setMode } = useGeneratorStore.getState()
-        setMode('image')
-      }
-      const limit = mode === 'reverse' ? 1 : MAX_FILES
-      const merged = [...files, ...imageFiles].slice(0, limit)
-      setFiles(merged)
-      toast(`已粘贴 ${imageFiles.length} 张图片`, 'success')
     }
   }
+
+  useEffect(() => {
+    const handleWindowPaste = (e: ClipboardEvent) => {
+      if (e.defaultPrevented) return
+      const target = e.target as HTMLElement | null
+      if (target?.tagName === 'INPUT' || target?.tagName === 'TEXTAREA' || target?.isContentEditable) return
+      const imageFiles = filesFromClipboard(e.clipboardData)
+      if (imageFiles.length > 0 && addImageFiles(imageFiles)) {
+        e.preventDefault()
+      }
+    }
+    window.addEventListener('paste', handleWindowPaste)
+    return () => window.removeEventListener('paste', handleWindowPaste)
+  }, [files, mode])
 
   const handleThumbHover = (e: React.MouseEvent, url: string) => {
     const rect = (e.currentTarget as HTMLElement).getBoundingClientRect()
@@ -154,13 +186,14 @@ export function Composer() {
       openSettings()
       return
     }
-    if (mode === 'image' && files.length === 0) return toast('请先上传参考图片', 'error')
-    if (!prompt.trim() && mode === 'text') return toast('请输入提示词', 'error')
+    const hasReferenceFiles = files.length > 0
+    if (mode === 'image' && !hasReferenceFiles) return toast('请先上传参考图片', 'error')
+    if (!prompt.trim() && mode === 'text' && !hasReferenceFiles) return toast('请输入提示词', 'error')
     setGenerating(true)
 
     try {
       const imageUrls: string[] = []
-      if (mode === 'image') {
+      if (hasReferenceFiles) {
         for (const file of files) {
           try {
             const uploadedUrl = await uploadImage(file)
@@ -172,6 +205,12 @@ export function Composer() {
             return
           }
         }
+      }
+
+      if (hasReferenceFiles && imageUrls.length !== files.length) {
+        toast('参考图上传未完成，请重新上传后再生成', 'error')
+        setGenerating(false)
+        return
       }
 
       let finalPrompt = prompt.trim()
@@ -207,39 +246,16 @@ export function Composer() {
     }
   }
 
-  const imageToBase64 = (file: File, maxWidth = 1024, quality = 0.8): Promise<string> =>
-    new Promise((resolve, reject) => {
-      const img = new Image()
-      const url = URL.createObjectURL(file)
-      img.onload = () => {
-        URL.revokeObjectURL(url)
-        let { width, height } = img
-        if (width > maxWidth) {
-          height = Math.round(height * (maxWidth / width))
-          width = maxWidth
-        }
-        const canvas = document.createElement('canvas')
-        canvas.width = width
-        canvas.height = height
-        const ctx = canvas.getContext('2d')!
-        ctx.drawImage(img, 0, 0, width, height)
-        resolve(canvas.toDataURL('image/jpeg', quality))
-      }
-      img.onerror = () => {
-        URL.revokeObjectURL(url)
-        reject(new Error('图片读取失败'))
-      }
-      img.src = url
-    })
-
   const handleReverse = async () => {
     if (!files[0]) return toast('请上传图片', 'error')
     if (!user) { openSettings(); return }
     setReversing(true)
     try {
-      const base64 = await imageToBase64(files[0])
-      const { data } = await api.post('/reverse-prompt', {
-        image_url: base64,
+      const imageUrl = await uploadImage(files[0])
+      if (!imageUrl) throw new Error('图片上传失败，请重试')
+      const reverseApiBase = process.env.NEXT_PUBLIC_API_URL || ''
+      const { data } = await api.post(`${reverseApiBase}/api/reverse-prompt`, {
+        image_url: imageUrl,
         prompt: prompt.trim() || undefined,
       })
       if (data.prompt) {
