@@ -137,6 +137,14 @@ export function Composer() {
     setHoverPreview({ url, x: rect.left + rect.width / 2, y: rect.top })
   }
 
+  const handleThumbClick = (e: React.MouseEvent, url: string) => {
+    e.stopPropagation()
+    const rect = (e.currentTarget as HTMLElement).getBoundingClientRect()
+    setHoverPreview((current) => (
+      current?.url === url ? null : { url, x: rect.left + rect.width / 2, y: rect.top }
+    ))
+  }
+
   const { openSettings } = useUIStore()
 
   const handleGenerate = async () => {
@@ -146,42 +154,42 @@ export function Composer() {
       openSettings()
       return
     }
+    if (mode === 'image' && files.length === 0) return toast('请先上传参考图片', 'error')
     if (!prompt.trim() && mode === 'text') return toast('请输入提示词', 'error')
     setGenerating(true)
 
     try {
-      let imageUrl = ''
-      if (mode === 'image' && files[0]) {
-        try {
-          imageUrl = await uploadImage(files[0])
-        } catch (uploadErr: any) {
-          toast(uploadErr?.response?.data?.message || '图片上传失败，请重试', 'error')
-          setGenerating(false)
-          return
-        }
-        if (!imageUrl) {
-          toast('图片上传失败，请重试', 'error')
-          setGenerating(false)
-          return
+      const imageUrls: string[] = []
+      if (mode === 'image') {
+        for (const file of files) {
+          try {
+            const uploadedUrl = await uploadImage(file)
+            if (!uploadedUrl) throw new Error('图片上传失败，请重试')
+            imageUrls.push(uploadedUrl)
+          } catch (uploadErr: any) {
+            toast(uploadErr?.response?.data?.message || uploadErr?.message || '图片上传失败，请重试', 'error')
+            setGenerating(false)
+            return
+          }
         }
       }
 
       let finalPrompt = prompt.trim()
-      if (imageUrl && finalPrompt) {
+      if (imageUrls.length > 0 && finalPrompt) {
         finalPrompt = `参考上传的图片作为基础，${finalPrompt}`
-      } else if (imageUrl && !finalPrompt) {
+      } else if (imageUrls.length > 0 && !finalPrompt) {
         finalPrompt = '参考上传的图片，生成一张风格和内容相似的图片'
       }
 
       const { data } = await api.post('/apps/image-gen/generate', {
         prompt: finalPrompt,
         model,
-        mode: imageUrl ? 'image' : 'text',
+        mode: imageUrls.length > 0 ? 'image' : 'text',
         size,
         quality,
         count,
         public: isPublic,
-        file_urls: imageUrl ? [imageUrl] : undefined,
+        file_urls: imageUrls.length > 0 ? imageUrls : undefined,
       })
 
       setActiveTaskId(data.task_id)
@@ -194,7 +202,7 @@ export function Composer() {
         }
       })
     } catch (err: any) {
-      toast(err.response?.data?.message || '提交失败', 'error')
+      toast(err.response?.data?.message || err.response?.data?.error || '提交失败', 'error')
       setGenerating(false)
     }
   }
@@ -295,9 +303,10 @@ export function Composer() {
                     className={`thumb${removingIdx === i ? ' removing' : ''}`}
                     onMouseEnter={(e) => handleThumbHover(e, thumbUrls[i])}
                     onMouseLeave={() => setHoverPreview(null)}
+                    onClick={(e) => handleThumbClick(e, thumbUrls[i])}
                   >
                     <img src={thumbUrls[i]} alt="" />
-                    <button type="button" onClick={() => handleRemoveFile(i)} aria-label="移除">×</button>
+                    <button type="button" onClick={(e) => { e.stopPropagation(); handleRemoveFile(i); setHoverPreview(null) }} aria-label="移除">×</button>
                   </div>
                 ))}
               </div>
@@ -463,7 +472,7 @@ export function Composer() {
               <button
                 className={`black-btn${generating ? ' loading' : ''}`}
                 type="button"
-                disabled={generating || reversing}
+                disabled={generating || reversing || (mode === 'image' && !files.length)}
                 onClick={handleGenerate}
               >
                 {generating ? '生成中' : `生成 · ${totalCost}积分`}
@@ -477,6 +486,7 @@ export function Composer() {
         <div
           className="image-hover-preview show"
           style={{ left: hoverPreview.x - 90, top: hoverPreview.y - 192 }}
+          onClick={() => setHoverPreview(null)}
         >
           <img src={hoverPreview.url} alt="" />
         </div>,

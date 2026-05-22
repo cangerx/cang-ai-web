@@ -86,8 +86,22 @@ export async function uploadImage(file: File): Promise<string> {
   // 3. 后端中转上传
   const formData = new FormData()
   formData.append('image', compressed)
-  const { data } = await api.post('/upload-image', formData, {
-    headers: { 'Content-Type': 'multipart/form-data' },
+  const headers: Record<string, string> = { Accept: 'application/json' }
+  if (typeof window !== 'undefined') {
+    const token = localStorage.getItem('auth_token')
+    if (token) headers.Authorization = `Bearer ${token}`
+  }
+  const resp = await fetch('/api/upload-image', {
+    method: 'POST',
+    headers,
+    body: formData,
   })
+  const data = await resp.json().catch(() => ({}))
+  if (!resp.ok) {
+    throw new Error(data.message || data.error || '图片上传失败')
+  }
+  if (!data.url) {
+    throw new Error('图片上传失败')
+  }
   return data.url
 }
