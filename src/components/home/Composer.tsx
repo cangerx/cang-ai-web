@@ -7,7 +7,7 @@ import { useSiteStore } from '@/stores/site'
 import { useGeneratorStore } from '@/stores/generator'
 import api from '@/lib/api'
 import { toast } from '@/components/ui/Toaster'
-import { validateFile, uploadImage, MAX_FILE_SIZE } from '@/lib/image-upload'
+import { validateFile, uploadImage } from '@/lib/image-upload'
 
 const QUALITY_LABELS: Record<string, string> = { low: '标清 1K', medium: '高清 2K', high: '超清 4K' }
 
