@@ -167,6 +167,13 @@ export function Composer() {
 
       setActiveTaskId(data.task_id)
       toast('任务已提交', 'success')
+      requestAnimationFrame(() => {
+        const el = document.getElementById('prompt')
+        if (el) {
+          el.classList.add('highlight-pulse')
+          setTimeout(() => el.classList.remove('highlight-pulse'), 1500)
+        }
+      })
     } catch (err: any) {
       toast(err.response?.data?.message || '提交失败', 'error')
       setGenerating(false)
