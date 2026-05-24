@@ -393,6 +393,33 @@ export function SettingsModal({ open, onClose }: Props) {
                 <button className="black-btn" type="button" onClick={handleLogin} disabled={loading}>
                   {loading ? '登录中...' : '登录'}
                 </button>
+
+                {(config?.login_methods?.github || config?.login_methods?.wechat) && (
+                  <div className="oauth-section" style={{ width: '100%' }}>
+                    <div className="oauth-divider">
+                      <span>第三方快捷登录</span>
+                    </div>
+                    <div style={{ display: 'flex', gap: '8px', width: '100%' }}>
+                      {config.login_methods.github && (
+                        <a href="/api/auth/github" className="oauth-btn" style={{ flex: 1, textDecoration: 'none', marginBottom: 0 }}>
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
+                          </svg>
+                          GitHub
+                        </a>
+                      )}
+                      {config.login_methods.wechat && (
+                        <a href="/api/auth/wechat" className="oauth-btn oauth-btn-wechat" style={{ flex: 1, textDecoration: 'none', marginBottom: 0 }}>
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M8.88 12.18c0-.39-.31-.7-.7-.7-.39 0-.7.31-.7.7 0 .39.31.7.7.7.39 0 .7-.31.7-.7zm4.18 0c0-.39-.31-.7-.7-.7-.39 0-.7.31-.7.7 0 .39.31.7.7.7.39 0 .7-.31.7-.7zm8.38-.85c0-3.44-3.72-6.24-8.31-6.24-4.59 0-8.31 2.8-8.31 6.24 0 3.44 3.72 6.24 8.31 6.24.97 0 1.91-.13 2.78-.37l2.25 1.13c.2.1.44.02.54-.18.04-.08.05-.17.02-.25l-.47-1.74c1.99-1.12 3.32-3.05 3.32-5.07zm-11.45.85c0-.49-.39-.88-.88-.88-.49 0-.88.39-.88.88 0 .49.39.88.88.88.49 0 .88-.39.88-.88zm4.18 0c0-.49-.39-.88-.88-.88-.49 0-.88.39-.88.88 0 .49.39.88.88.88.49 0 .88-.39.88-.88z"/>
+                          </svg>
+                          微信登录
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                )}
+
                 <div className="auth-links auth-links-polished">
                   <span className="auth-register-text">
                     没有账号？
