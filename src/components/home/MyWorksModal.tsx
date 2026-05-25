@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { createPortal } from 'react-dom'
 import { useAuthStore } from '@/stores/auth'
 import api from '@/lib/api'
+import { downloadImage } from '@/lib/download'
 
 interface TaskItem {
   url: string
@@ -118,9 +119,7 @@ export function MyWorksModal({ open, onClose }: { open: boolean; onClose: () => 
             <div className="gallery-lb-prompt">{lbTask.prompt || '无描述'}</div>
             <div className="gallery-lb-actions">
               <button onClick={() => { navigator.clipboard.writeText(lbTask.prompt || '') }}>复制提示词</button>
-              <a href={lbTask.items[lbImgIdx]?.url} download="" target="_blank" rel="noopener noreferrer">
-                <button type="button">下载</button>
-              </a>
+              <button type="button" onClick={() => downloadImage(lbTask.items[lbImgIdx]?.url)}>下载</button>
             </div>
           </div>
         </div>

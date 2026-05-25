@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, useCallback } from 'react'
 import { useGeneratorStore } from '@/stores/generator'
 import api from '@/lib/api'
+import { downloadImage } from '@/lib/download'
 import { toast } from '@/components/ui/Toaster'
 
 const STATUS_LABELS: Record<string, string> = {
@@ -242,8 +243,7 @@ export function GenerationStage() {
   }
 
   const handleDownload = (url: string) => {
-    const a = document.createElement('a')
-    a.href = url; a.download = ''; a.target = '_blank'; a.click()
+    downloadImage(url)
   }
 
   if (status === 'idle' && !activeTaskId) return null

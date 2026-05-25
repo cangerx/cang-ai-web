@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import api from '@/lib/api'
+import { downloadImage } from '@/lib/download'
 import { useGeneratorStore } from '@/stores/generator'
 import { SubPageLayout } from '@/components/layout/SubPageLayout'
 
@@ -48,8 +49,7 @@ export default function ExplorePage() {
 
   const handleDownload = () => {
     if (lbIdx === null) return
-    const a = document.createElement('a')
-    a.href = items[lbIdx].image_url; a.download = ''; a.target = '_blank'; a.click()
+    downloadImage(items[lbIdx].image_url)
   }
 
   const handleUse = () => {
