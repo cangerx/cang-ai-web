@@ -253,8 +253,7 @@ export function Composer() {
     try {
       const imageUrl = await uploadImage(files[0])
       if (!imageUrl) throw new Error('图片上传失败，请重试')
-      const reverseApiBase = process.env.NEXT_PUBLIC_API_URL || ''
-      const { data } = await api.post(`${reverseApiBase}/api/reverse-prompt`, {
+      const { data } = await api.post('/reverse-prompt', {
         image_url: imageUrl,
         prompt: prompt.trim() || undefined,
       })
