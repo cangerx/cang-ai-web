@@ -67,9 +67,13 @@ export default theme
 |---|---|
 | 浏览器访问 `/?theme=chatgpt-like` | 预览，自动写 cookie 持久化 |
 | `POST /api/themes` body `{key:'xxx'}` | 应用内切换 |
-| `GET /api/themes` | 列出已注册模板 + 当前 active |
+| `GET /api/themes` | 列出前端已注册模板 + 当前 active |
 | 设置 cookie `cang_theme=xxx` | 直接持久化（中间件/后端都可 set） |
-| `NEXT_PUBLIC_DEFAULT_THEME=xxx` | 站点默认（无 cookie 时） |
+| 后端 Filament「站点设置 → 前端主题」 | 站点全局默认（无 cookie 时所有访客生效）|
+| `NEXT_PUBLIC_DEFAULT_THEME=xxx` | 部署时兜底（后端不可达时使用） |
+
+主题来源优先级（高 → 低）：
+**cookie → 后端 `/api/site/theme` → env → registry 默认值**
 
 ## 设计原则
 
@@ -84,8 +88,8 @@ export default theme
 - **First Load JS 偏大**：所有 client pages 通过 `theme.config.ts` 静态 import 聚合到同一个共享 chunk（多主题架构的固有成本）。若在意，可改为 `React.lazy` + Suspense 按需拆分，但 SSR 调度复杂度上升
 - **Middleware 白名单需手动维护**：Edge runtime 无法 import 完整 registry。新增主题记得在两处同步：`registry.ts` + `middleware.ts`
 
-## 待办（后端侧）
+## 后端联动
 
-- `SiteSetting.active_theme` 字段（站点全局默认主题）
-- Filament 后台一个 `Select` 字段，options 走 `GET /api/themes`
-- 前端在没有 cookie 时，从后端 `/api/site/theme` 取站点默认
+- 字段 `SiteSetting::get('active_theme', 'default')`
+- Filament「站点设置 → 前端主题」可改默认值
+- 端点 `GET /api/site/theme` 返回 `{ active: 'xxx' }`，前端 SSR 在无 cookie 时调用
