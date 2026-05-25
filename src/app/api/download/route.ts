@@ -9,6 +9,31 @@ export async function GET(request: NextRequest) {
   }
 
   try {
+    // 验证并防范 SSRF (Server-Side Request Forgery) 漏洞
+    let parsedUrl: URL
+    try {
+      parsedUrl = new URL(imageUrl)
+    } catch {
+      return new NextResponse('Invalid URL format', { status: 400 })
+    }
+
+    if (parsedUrl.protocol !== 'http:' && parsedUrl.protocol !== 'https:') {
+      return new NextResponse('Invalid protocol. Only HTTP and HTTPS are allowed.', { status: 400 })
+    }
+
+    const hostname = parsedUrl.hostname.toLowerCase()
+    const isPrivateHost = 
+      hostname === 'localhost' ||
+      hostname === '127.0.0.1' ||
+      hostname === '0.0.0.0' ||
+      hostname.startsWith('192.168.') ||
+      hostname.startsWith('10.') ||
+      hostname.match(/^172\.(1[6-9]|2[0-9]|3[0-1])\./)
+
+    if (isPrivateHost) {
+      return new NextResponse('Access to internal or loopback networks is forbidden', { status: 403 })
+    }
+
     const response = await fetch(imageUrl)
     if (!response.ok) {
       return new NextResponse(`Failed to fetch image: ${response.statusText}`, { status: response.status })
