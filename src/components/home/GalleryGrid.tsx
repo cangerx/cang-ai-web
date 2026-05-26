@@ -4,12 +4,14 @@ import { useEffect, useState } from 'react'
 import api from '@/lib/api'
 import { downloadImage } from '@/lib/download'
 import { getModelDisplayName } from '@/lib/model-display'
+import { getTaskImageUrls } from '@/lib/task-images'
 import { useGeneratorStore } from '@/stores/generator'
 import { useSiteStore } from '@/stores/site'
 
 interface GalleryItemData {
-  id: number
+  id: string | number
   image_url: string
+  images: string[]
   prompt: string
   model: string
   size?: string
@@ -18,6 +20,7 @@ interface GalleryItemData {
 export function GalleryGrid() {
   const [items, setItems] = useState<GalleryItemData[]>([])
   const [lbIdx, setLbIdx] = useState<number | null>(null)
+  const [lbImgIdx, setLbImgIdx] = useState(0)
   const { setPrompt, setMode } = useGeneratorStore()
   const models = useSiteStore((state) => state.config?.models || [])
 
@@ -25,13 +28,17 @@ export function GalleryGrid() {
     api.get('/explore', { params: { per_page: 20 } })
       .then(({ data }) => {
         const raw = data.items || data.data || []
-        setItems(Array.isArray(raw) ? raw.map((it: any) => ({
-          id: it.task_id || it.id,
-          image_url: it.thumb || it.image_url || (it.images && it.images[0]) || '',
-          prompt: it.prompt || '',
-          model: it.model_name || it.model || '',
-          size: it.size,
-        })) : [])
+        setItems(Array.isArray(raw) ? raw.map((it: any) => {
+          const images = getTaskImageUrls(it)
+          return {
+            id: it.task_id || it.id,
+            image_url: images[0] || '',
+            images,
+            prompt: it.prompt || '',
+            model: it.model_name || it.model || '',
+            size: it.size,
+          }
+        }).filter((it) => it.image_url) : [])
       })
       .catch(() => {})
   }, [])
@@ -41,10 +48,10 @@ export function GalleryGrid() {
     e.currentTarget.closest('.gallery-item')?.classList.add('img-loaded')
   }
 
-  const openLb = (idx: number) => setLbIdx(idx)
+  const openLb = (idx: number) => { setLbIdx(idx); setLbImgIdx(0) }
   const closeLb = () => setLbIdx(null)
-  const lbPrev = () => setLbIdx((prev) => prev !== null ? (prev - 1 + items.length) % items.length : null)
-  const lbNext = () => setLbIdx((prev) => prev !== null ? (prev + 1) % items.length : null)
+  const lbPrev = () => setLbImgIdx((prev) => lbItem ? (prev - 1 + lbItem.images.length) % lbItem.images.length : prev)
+  const lbNext = () => setLbImgIdx((prev) => lbItem ? (prev + 1) % lbItem.images.length : prev)
 
   const handleUse = () => {
     if (lbIdx === null) return
@@ -62,12 +69,13 @@ export function GalleryGrid() {
 
   const handleDownload = () => {
     if (lbIdx === null) return
-    downloadImage(items[lbIdx].image_url)
+    downloadImage(items[lbIdx].images[lbImgIdx] || items[lbIdx].image_url)
   }
 
   if (items.length === 0) return null
 
   const lbItem = lbIdx !== null ? items[lbIdx] : null
+  const lbImageUrl = lbItem ? (lbItem.images[lbImgIdx] || lbItem.image_url) : ''
 
   return (
     <>
@@ -80,6 +88,7 @@ export function GalleryGrid() {
           {items.map((item, i) => (
             <div key={item.id} className="gallery-item" onClick={() => openLb(i)}>
               <img src={item.image_url} alt={item.prompt} loading="lazy" onLoad={handleImgLoad} />
+              {item.images.length > 1 && <span className="sub-task-count">{item.images.length}张</span>}
               {item.prompt && (
                 <div className="gallery-overlay">
                   <p>{item.prompt}</p>
@@ -95,14 +104,18 @@ export function GalleryGrid() {
           <div className="gallery-lb-inner" onClick={(e) => e.stopPropagation()}>
             <div className="gallery-lb-img">
               <button className="gallery-lb-close" onClick={closeLb}>✕</button>
-              <button className="gallery-lb-nav prev" onClick={lbPrev}>‹</button>
-              <img src={lbItem.image_url} alt="" />
-              <button className="gallery-lb-nav next" onClick={lbNext}>›</button>
-              <div className="gallery-lb-dots">
-                {items.map((_, i) => (
-                  <span key={i} className={i === lbIdx ? 'active' : ''} onClick={() => setLbIdx(i)} />
-                ))}
-              </div>
+              {lbItem.images.length > 1 && <button className="gallery-lb-nav prev" onClick={lbPrev}>‹</button>}
+              <img src={lbImageUrl} alt="" />
+              {lbItem.images.length > 1 && (
+                <>
+                  <button className="gallery-lb-nav next" onClick={lbNext}>›</button>
+                  <div className="gallery-lb-dots">
+                    {lbItem.images.map((_, i) => (
+                      <span key={i} className={i === lbImgIdx ? 'active' : ''} onClick={() => setLbImgIdx(i)} />
+                    ))}
+                  </div>
+                </>
+              )}
             </div>
             <div className="gallery-lb-info">
               <div className="gallery-lb-prompt">{lbItem.prompt}</div>

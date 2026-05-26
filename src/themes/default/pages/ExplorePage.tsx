@@ -5,13 +5,15 @@ import { useRouter } from 'next/navigation'
 import api from '@/lib/api'
 import { downloadImage } from '@/lib/download'
 import { getModelDisplayName } from '@/lib/model-display'
+import { getTaskImageUrls } from '@/lib/task-images'
 import { useGeneratorStore } from '@/stores/generator'
 import { useSiteStore } from '@/stores/site'
 import { SubPageLayout } from '@/components/layout/SubPageLayout'
 
 interface ExploreItem {
-  id: number
+  id: string | number
   image_url: string
+  images: string[]
   prompt: string
   model: string
   size?: string
@@ -21,6 +23,7 @@ export default function ExplorePage() {
   const [items, setItems] = useState<ExploreItem[]>([])
   const [loading, setLoading] = useState(true)
   const [lbIdx, setLbIdx] = useState<number | null>(null)
+  const [lbImgIdx, setLbImgIdx] = useState(0)
   const { setPrompt, setMode } = useGeneratorStore()
   const models = useSiteStore((state) => state.config?.models || [])
   const router = useRouter()
@@ -29,21 +32,25 @@ export default function ExplorePage() {
     api.get('/explore', { params: { per_page: 40 } })
       .then(({ data }) => {
         const raw = data.items || data.data || []
-        setItems(Array.isArray(raw) ? raw.map((it: any) => ({
-          id: it.task_id || it.id,
-          image_url: it.thumb || it.image_url || (it.images && it.images[0]) || '',
-          prompt: it.prompt || '',
-          model: it.model_name || it.model || '',
-          size: it.size,
-        })) : [])
+        setItems(Array.isArray(raw) ? raw.map((it: any) => {
+          const images = getTaskImageUrls(it)
+          return {
+            id: it.task_id || it.id,
+            image_url: images[0] || '',
+            images,
+            prompt: it.prompt || '',
+            model: it.model_name || it.model || '',
+            size: it.size,
+          }
+        }).filter((it) => it.image_url) : [])
       })
       .catch(() => {})
       .finally(() => setLoading(false))
   }, [])
 
   const closeLb = () => setLbIdx(null)
-  const lbPrev = () => setLbIdx((p) => p !== null ? (p - 1 + items.length) % items.length : null)
-  const lbNext = () => setLbIdx((p) => p !== null ? (p + 1) % items.length : null)
+  const lbPrev = () => setLbImgIdx((p) => lbItem ? (p - 1 + lbItem.images.length) % lbItem.images.length : p)
+  const lbNext = () => setLbImgIdx((p) => lbItem ? (p + 1) % lbItem.images.length : p)
 
   const handleCopy = () => {
     if (lbIdx === null) return
@@ -52,7 +59,7 @@ export default function ExplorePage() {
 
   const handleDownload = () => {
     if (lbIdx === null) return
-    downloadImage(items[lbIdx].image_url)
+    downloadImage(items[lbIdx].images[lbImgIdx] || items[lbIdx].image_url)
   }
 
   const handleUse = () => {
@@ -64,6 +71,7 @@ export default function ExplorePage() {
   }
 
   const lbItem = lbIdx !== null ? items[lbIdx] : null
+  const lbImageUrl = lbItem ? (lbItem.images[lbImgIdx] || lbItem.image_url) : ''
 
   return (
     <SubPageLayout>
@@ -84,9 +92,10 @@ export default function ExplorePage() {
       ) : (
         <div className="sub-masonry">
           {items.map((item, i) => (
-            <div key={item.id} className="sub-masonry-item" onClick={() => setLbIdx(i)} style={{ cursor: 'pointer' }}>
+            <div key={item.id} className="sub-masonry-item" onClick={() => { setLbIdx(i); setLbImgIdx(0) }} style={{ cursor: 'pointer' }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={item.image_url} alt={item.prompt} loading="lazy" />
+              {item.images.length > 1 && <span className="sub-task-count">{item.images.length}张</span>}
               <div className="sub-masonry-overlay">
                 <p>{item.prompt}</p>
               </div>
@@ -100,16 +109,19 @@ export default function ExplorePage() {
           <div className="gallery-lb-inner" onClick={(e) => e.stopPropagation()}>
             <div className="gallery-lb-img">
               <button className="gallery-lb-close" onClick={closeLb}>✕</button>
-              <button className="gallery-lb-nav prev" onClick={lbPrev}>‹</button>
+              {lbItem.images.length > 1 && <button className="gallery-lb-nav prev" onClick={lbPrev}>‹</button>}
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={lbItem.image_url} alt="" />
-              <button className="gallery-lb-nav next" onClick={lbNext}>›</button>
-              <div className="gallery-lb-dots">
-                {items.slice(0, 20).map((_, i) => (
-                  <span key={i} className={i === lbIdx ? 'active' : ''} onClick={() => setLbIdx(i)} />
-                ))}
-                {items.length > 20 && <span style={{ opacity: 0.4 }}>…</span>}
-              </div>
+              <img src={lbImageUrl} alt="" />
+              {lbItem.images.length > 1 && (
+                <>
+                  <button className="gallery-lb-nav next" onClick={lbNext}>›</button>
+                  <div className="gallery-lb-dots">
+                    {lbItem.images.map((_, i) => (
+                      <span key={i} className={i === lbImgIdx ? 'active' : ''} onClick={() => setLbImgIdx(i)} />
+                    ))}
+                  </div>
+                </>
+              )}
             </div>
             <div className="gallery-lb-info">
               <div className="gallery-lb-prompt">{lbItem.prompt}</div>
