@@ -1,8 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
 
+export const runtime = 'nodejs'
+export const dynamic = 'force-dynamic'
+
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url)
   const imageUrl = searchParams.get('url')
+  const requestedFilename = searchParams.get('filename')
 
   if (!imageUrl) {
     return new NextResponse('Missing url parameter', { status: 400 })
@@ -34,7 +38,14 @@ export async function GET(request: NextRequest) {
       return new NextResponse('Access to internal or loopback networks is forbidden', { status: 403 })
     }
 
-    const response = await fetch(imageUrl)
+    const response = await fetch(imageUrl, {
+      cache: 'no-store',
+      redirect: 'follow',
+      headers: {
+        Accept: 'image/avif,image/webp,image/png,image/jpeg,image/*,*/*;q=0.8',
+        'User-Agent': 'Mozilla/5.0',
+      },
+    })
     if (!response.ok) {
       return new NextResponse(`Failed to fetch image: ${response.statusText}`, { status: response.status })
     }
@@ -42,15 +53,18 @@ export async function GET(request: NextRequest) {
     const contentType = response.headers.get('content-type') || 'application/octet-stream'
     
     // Extract filename from URL
-    let filename = imageUrl.split('/').pop()?.split('?')[0] || 'image.png'
+    let filename = requestedFilename || decodeURIComponent(parsedUrl.pathname.split('/').pop() || '') || 'image.png'
+    filename = filename.replace(/[\\/:*?"<>|\r\n]+/g, '_')
     if (!filename.includes('.')) {
-      const ext = contentType.split('/')[1] || 'png'
+      const subtype = contentType.split(';')[0].split('/')[1] || 'png'
+      const ext = subtype === 'jpeg' ? 'jpg' : subtype.replace('svg+xml', 'svg')
       filename = `${filename}.${ext}`
     }
 
     // Encoded filename for compatibility with HTTP headers (RFC 5987)
+    const asciiFilename = filename.replace(/[^\x20-\x7E]/g, '_').replace(/["\\]/g, '_') || 'image.png'
     const utf8Filename = encodeURIComponent(filename)
-    const contentDisposition = `attachment; filename="${utf8Filename}"; filename*=UTF-8''${utf8Filename}`
+    const contentDisposition = `attachment; filename="${asciiFilename}"; filename*=UTF-8''${utf8Filename}`
 
     // Get binary data
     const arrayBuffer = await response.arrayBuffer()
@@ -61,7 +75,11 @@ export async function GET(request: NextRequest) {
       headers: {
         'Content-Type': contentType,
         'Content-Disposition': contentDisposition,
-        'Cache-Control': 'no-cache',
+        'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+        Pragma: 'no-cache',
+        Expires: '0',
+        'Content-Length': String(buffer.length),
+        'X-Content-Type-Options': 'nosniff',
       },
     })
   } catch (error: any) {
