@@ -5,20 +5,41 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { useSiteStore } from '@/stores/site'
 import { useGeneratorStore } from '@/stores/generator'
 import { useAuthStore } from '@/stores/auth'
-import { AnnounceBar } from '@/components/home/AnnounceBar'
 import { HeroLogin } from '@/components/home/HeroLogin'
-import { ModeCards } from '@/components/home/ModeCards'
 import { Composer } from '@/components/home/Composer'
 import { GenerationStage } from '@/components/home/GenerationStage'
 import { GalleryGrid } from '@/components/home/GalleryGrid'
-import { Footer } from '@/components/home/Footer'
 import { TaskBall } from '@/components/home/TaskBall'
 import { MyWorksModal } from '@/components/home/MyWorksModal'
 
-const EXAMPLE_PROMPTS = [
-  '雨后森林里的小木屋，暖黄色窗光，水彩插画，治愈氛围',
-  '戴草帽的猫咪邮差骑车穿过花田，童话绘本质感',
-  '云朵上的小型咖啡馆，日落天空，柔和胶片色彩',
+const TEMPLATE_CARDS = [
+  { title: '烟花猫咪', uses: '6.6万人使用', tone: 'night', icon: '🐱' },
+  { title: '手绘风PLOG', uses: '0.8万人使用', tone: 'snow', icon: '🏔️' },
+  { title: '软线稿贴纸', uses: '0.7万人使用', tone: 'sketch', icon: '✍️' },
+  { title: '卡通头像', uses: '2.9万人使用', tone: 'pink', icon: '🌷' },
+  { title: '涂鸦头像', uses: '2.5万人使用', tone: 'garden', icon: '💐' },
+  { title: '史诗海报', uses: '0.8万人使用', tone: 'poster', icon: '🎞️' },
+]
+
+const STYLE_CARDS = [
+  { title: '春日电影感', badge: '新品', tone: 'spring' },
+  { title: '小红书封面', badge: '新品', tone: 'cover' },
+  { title: '日系动漫', tone: 'anime' },
+  { title: '清新插画', tone: 'field' },
+  { title: '复古漫画', tone: 'comic' },
+  { title: '泡泡潮玩', tone: 'pop' },
+]
+
+const MODE_TABS = [
+  { key: 'text' as const, label: '文生图' },
+  { key: 'image' as const, label: '图生图' },
+  { key: 'reverse' as const, label: '提示词反推' },
+]
+
+const QUICK_PROMPTS = [
+  '巨型浮空城堡产品广告',
+  '夏日海边 Polaroid 复古写真',
+  '绝美妹妹头像包（meme 系）',
 ]
 
 export default function HomePage() {
@@ -106,101 +127,147 @@ export default function HomePage() {
 
   const fillPrompt = (value: string) => {
     setPrompt(value)
-    document.getElementById('studio')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    document.getElementById('ghiblio-generator')?.scrollIntoView({ behavior: 'smooth', block: 'center' })
   }
 
   return (
-    <main className={`ghiblio-shell${generating || activeTaskId ? ' is-making' : ''}`}>
-      <div className="ghiblio-sky" />
-      <div className="ghiblio-grain" />
-      <AnnounceBar />
-
-      <nav className="ghiblio-nav">
-        <a className="ghiblio-brand" href="/">
-          <span className="ghiblio-brand-mark">✦</span>
-          <span>{config?.site_name || 'Pix Studio'}</span>
-        </a>
-        <div className="ghiblio-nav-links">
-          <a href="/explore">灵感社区</a>
-          <a href="/templates">提示词模板</a>
-          <a href="/pricing">定价</a>
+    <main className={`ghiblio-page${generating || activeTaskId ? ' is-generating' : ''}`}>
+      <section className="ghiblio-hero-scene">
+        <div className="ghiblio-bg-paint">
+          <span className="tree tree-left" />
+          <span className="tree tree-right" />
+          <span className="cloud cloud-one" />
+          <span className="cloud cloud-two" />
+          <span className="cloud cloud-three" />
+          <span className="hill hill-back" />
+          <span className="hill hill-mid" />
+          <span className="hill hill-front" />
         </div>
-        <HeroLogin />
-      </nav>
 
-      <section className="ghiblio-hero">
-        <div className="ghiblio-hero-copy">
-          <div className="ghiblio-eyebrow">AI ART & IMAGE STUDIO</div>
-          <h1>{config?.hero_title || '把一句想象，画成温柔的作品'}</h1>
-          <p>{config?.hero_subtitle || '用文字、参考图和智能提示词工具创作插画、海报、头像和故事感画面。所有生成结果都能继续查看、下载和发布到灵感社区。'}</p>
-          <div className="ghiblio-hero-actions">
-            <a href="#studio" className="ghiblio-primary">开始创作</a>
-            <button type="button" className="ghiblio-secondary" onClick={() => setWorksOpen(true)}>我的作品</button>
+        <nav className="ghiblio-topbar">
+          <a className="ghiblio-logo" href="/">
+            <span>🧸</span>
+          </a>
+          <div className="ghiblio-nav-main">
+            <a href="/">首页</a>
+            <a href="/templates">AI工具⌄</a>
+            <a href="/templates">模型 <b>New</b>⌄</a>
+            <a href="#hot-templates">模板广场</a>
+            <a href="#hot-styles">灵感社区</a>
+            <a href="/pricing">提示词库⌄</a>
+            <button type="button" onClick={() => setWorksOpen(true)}>我的作品</button>
           </div>
-          <div className="ghiblio-prompt-strip">
-            {EXAMPLE_PROMPTS.map((text) => (
-              <button key={text} type="button" onClick={() => fillPrompt(text)}>{text}</button>
+          <div className="ghiblio-nav-actions">
+            <a className="upgrade" href="/pricing">升级会员</a>
+            <button className="language" type="button">🌐 简体中文</button>
+            <HeroLogin />
+          </div>
+        </nav>
+
+        <div className="ghiblio-hero-content">
+          <a className="ghiblio-model-link" href="/pricing">✨ GPT Image 2 现已上线 →</a>
+          <h1>{config?.hero_title || '一站式AI艺术与视频创作平台'}</h1>
+          <div className="ghiblio-type-switch">
+            <button className="active" type="button">图片生成</button>
+            <button type="button">视频生成</button>
+          </div>
+
+          <section id="ghiblio-generator" className="ghiblio-generator">
+            <div className="ghiblio-mode-tabs">
+              {MODE_TABS.map((tab) => (
+                <button
+                  key={tab.key}
+                  type="button"
+                  className={mode === tab.key ? 'active' : ''}
+                  onClick={() => setMode(tab.key)}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+            <GenerationStage />
+            <Composer />
+          </section>
+
+          <div className="ghiblio-quick-row">
+            <button type="button" className="circle-tool">↻</button>
+            {QUICK_PROMPTS.map((item) => (
+              <button key={item} type="button" onClick={() => fillPrompt(item)}>{item}</button>
             ))}
           </div>
         </div>
 
-        <div className="ghiblio-story-card">
-          <div className="ghiblio-art-frame">
-            <div className="ghiblio-sun" />
-            <div className="ghiblio-cloud cloud-a" />
-            <div className="ghiblio-cloud cloud-b" />
-            <div className="ghiblio-hill hill-a" />
-            <div className="ghiblio-hill hill-b" />
-            <div className="ghiblio-house">
-              <span />
-              <i />
+        <div className="ghiblio-down">⌄</div>
+      </section>
+
+      <section className="ghiblio-black-section">
+        <div className="ghiblio-content-wrap">
+          <section id="hot-templates" className="ghiblio-showcase">
+            <div className="ghiblio-section-head">
+              <div>
+                <h2>热门AI模板</h2>
+                <div className="ghiblio-filter-tabs">
+                  <button className="active" type="button">全部</button>
+                  <button type="button">宠物</button>
+                  <button type="button">人物</button>
+                  <button type="button">我的收藏</button>
+                </div>
+              </div>
+              <a href="/templates">全部模板 →</a>
             </div>
-            <div className="ghiblio-path" />
-          </div>
-          <div className="ghiblio-story-meta">
-            <span>文字生图</span>
-            <span>参考图生成</span>
-            <span>提示词反推</span>
-          </div>
+            <div className="ghiblio-card-row">
+              {TEMPLATE_CARDS.map((card) => (
+                <article key={card.title} className="ghiblio-template-card">
+                  <div className={`ghiblio-card-art tone-${card.tone}`}>
+                    <span>{card.icon}</span>
+                  </div>
+                  <div className="ghiblio-card-body">
+                    <div className="ghiblio-card-title">
+                      <strong>{card.title}</strong>
+                      <span>{card.uses}</span>
+                    </div>
+                    <div className="ghiblio-card-actions">
+                      <button type="button" onClick={() => fillPrompt(card.title)}>制作同款</button>
+                      <button type="button">作品集</button>
+                      <button type="button">☆</button>
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </section>
+
+          <section id="hot-styles" className="ghiblio-showcase">
+            <div className="ghiblio-section-head">
+              <div>
+                <h2>热门风格</h2>
+                <div className="ghiblio-filter-tabs">
+                  <button className="active" type="button">全部</button>
+                  <button type="button">小红书</button>
+                  <button type="button">穿搭</button>
+                  <button type="button">头像</button>
+                  <button type="button">经典动画</button>
+                  <button type="button">艺术风格</button>
+                </div>
+              </div>
+              <a href="/explore">全部风格 →</a>
+            </div>
+            <div className="ghiblio-style-grid">
+              {STYLE_CARDS.map((card) => (
+                <button key={card.title} type="button" className={`ghiblio-style-card tone-${card.tone}`} onClick={() => fillPrompt(card.title)}>
+                  {card.badge && <span>{card.badge}</span>}
+                  <strong>{card.title}</strong>
+                </button>
+              ))}
+            </div>
+          </section>
+
+          <section className="ghiblio-gallery-strip">
+            <GalleryGrid />
+          </section>
         </div>
       </section>
 
-      <section className="ghiblio-capabilities">
-        <article>
-          <span>01</span>
-          <strong>多模型生成</strong>
-          <p>根据后台模型配置自动展示可用模型、尺寸、质量和张数。</p>
-        </article>
-        <article>
-          <span>02</span>
-          <strong>作品管理</strong>
-          <p>生成后可查看多图结果，下载、复制提示词，并回到我的作品。</p>
-        </article>
-        <article>
-          <span>03</span>
-          <strong>灵感社区</strong>
-          <p>公开作品进入社区画廊，同一任务内多张图可以连续浏览。</p>
-        </article>
-      </section>
-
-      <section id="studio" className="ghiblio-studio">
-        <div className="ghiblio-studio-head">
-          <div>
-            <span>创作工作台</span>
-            <h2>选择方式，开始生成</h2>
-          </div>
-          <button type="button" onClick={() => setWorksOpen(true)}>查看我的作品</button>
-        </div>
-        <ModeCards />
-        <GenerationStage />
-        <Composer />
-      </section>
-
-      <section className="ghiblio-gallery-section">
-        <GalleryGrid />
-      </section>
-
-      <Footer />
       <TaskBall />
       <MyWorksModal open={worksOpen} onClose={() => setWorksOpen(false)} />
 
