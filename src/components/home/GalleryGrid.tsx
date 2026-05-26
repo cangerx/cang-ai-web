@@ -3,7 +3,9 @@
 import { useEffect, useState } from 'react'
 import api from '@/lib/api'
 import { downloadImage } from '@/lib/download'
+import { getModelDisplayName } from '@/lib/model-display'
 import { useGeneratorStore } from '@/stores/generator'
+import { useSiteStore } from '@/stores/site'
 
 interface GalleryItemData {
   id: number
@@ -17,6 +19,7 @@ export function GalleryGrid() {
   const [items, setItems] = useState<GalleryItemData[]>([])
   const [lbIdx, setLbIdx] = useState<number | null>(null)
   const { setPrompt, setMode } = useGeneratorStore()
+  const models = useSiteStore((state) => state.config?.models || [])
 
   useEffect(() => {
     api.get('/explore', { params: { per_page: 20 } })
@@ -104,7 +107,7 @@ export function GalleryGrid() {
             <div className="gallery-lb-info">
               <div className="gallery-lb-prompt">{lbItem.prompt}</div>
               <div className="gallery-lb-meta">
-                {lbItem.model && <span>{lbItem.model}</span>}
+                {getModelDisplayName(lbItem.model, models) && <span>{getModelDisplayName(lbItem.model, models)}</span>}
                 {lbItem.size && <span>{lbItem.size}</span>}
               </div>
               <div className="gallery-lb-actions">

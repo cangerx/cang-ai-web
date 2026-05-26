@@ -4,7 +4,9 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import api from '@/lib/api'
 import { downloadImage } from '@/lib/download'
+import { getModelDisplayName } from '@/lib/model-display'
 import { useGeneratorStore } from '@/stores/generator'
+import { useSiteStore } from '@/stores/site'
 import { SubPageLayout } from '@/components/layout/SubPageLayout'
 
 interface ExploreItem {
@@ -20,6 +22,7 @@ export default function ExplorePage() {
   const [loading, setLoading] = useState(true)
   const [lbIdx, setLbIdx] = useState<number | null>(null)
   const { setPrompt, setMode } = useGeneratorStore()
+  const models = useSiteStore((state) => state.config?.models || [])
   const router = useRouter()
 
   useEffect(() => {
@@ -111,7 +114,7 @@ export default function ExplorePage() {
             <div className="gallery-lb-info">
               <div className="gallery-lb-prompt">{lbItem.prompt}</div>
               <div className="gallery-lb-meta">
-                {lbItem.model && <span>{lbItem.model}</span>}
+                {getModelDisplayName(lbItem.model, models) && <span>{getModelDisplayName(lbItem.model, models)}</span>}
                 {lbItem.size && <span>{lbItem.size}</span>}
               </div>
               <div className="gallery-lb-actions">

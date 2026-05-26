@@ -2,8 +2,10 @@
 
 import { memo, useEffect, useRef, useState, useCallback } from 'react'
 import { useGeneratorStore } from '@/stores/generator'
+import { useSiteStore } from '@/stores/site'
 import api from '@/lib/api'
 import { downloadImage } from '@/lib/download'
+import { getModelDisplayName } from '@/lib/model-display'
 import { toast } from '@/components/ui/Toaster'
 
 const STATUS_LABELS: Record<string, string> = {
@@ -121,12 +123,13 @@ export const GenerationStage = memo(function GenerationStage() {
   useEffect(() => {
     if (!activeTaskId) return
     const snapshot = useGeneratorStore.getState()
+    const modelOptions = useSiteStore.getState().config?.models || []
     setStatus('processing')
     setImages([])
     setEntered(new Set())
     setInfo('生成中...')
     setTaskPrompt(snapshot.prompt)
-    setTaskModel(snapshot.model)
+    setTaskModel(getModelDisplayName(snapshot.model, modelOptions))
     setTaskSize(snapshot.size)
     setTaskQuality(snapshot.quality)
     setTaskCount(snapshot.count || 1)
@@ -159,7 +162,10 @@ export const GenerationStage = memo(function GenerationStage() {
           setImages(imgs)
           if (imgs.length > 0) setTaskCount(imgs.length)
           if (task.prompt) setTaskPrompt(task.prompt)
-          if (task.model) setTaskModel(task.model)
+          if (task.model) {
+            const modelLabel = getModelDisplayName(task.model, modelOptions)
+            if (modelLabel) setTaskModel(modelLabel)
+          }
           if (task.size) setTaskSize(task.size)
           setStatus('done')
           setInfo(`生成完成 · ${imgs.length} 张`)

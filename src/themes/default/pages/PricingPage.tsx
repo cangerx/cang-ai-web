@@ -4,6 +4,7 @@ import { useSiteStore } from '@/stores/site'
 import { useEffect } from 'react'
 import Link from 'next/link'
 import { SubPageLayout } from '@/components/layout/SubPageLayout'
+import { getModelDisplayName } from '@/lib/model-display'
 
 export default function PricingPage() {
   const { config, fetchConfig } = useSiteStore()
@@ -50,7 +51,7 @@ export default function PricingPage() {
             <tbody>
               {rules.map((r, i) => (
                 <tr key={i}>
-                  <td>{r.model}</td>
+                  <td>{getModelDisplayName(r.model, config?.models || [], r.model === '*' ? '全部' : '模型')}</td>
                   <td style={{ color: '#71717a' }}>{r.quality === '*' ? '全部' : r.quality}</td>
                   <td>{r.credits}</td>
                 </tr>

@@ -7,6 +7,7 @@ import { useSiteStore } from '@/stores/site'
 import { useGeneratorStore } from '@/stores/generator'
 import { useUIStore } from '@/stores/ui'
 import api from '@/lib/api'
+import { getModelDisplayName } from '@/lib/model-display'
 import { toast } from '@/components/ui/Toaster'
 import { validateFile, uploadImage } from '@/lib/image-upload'
 
@@ -58,7 +59,7 @@ export function Composer() {
   const availableSizes = currentModelConfig?.sizes?.length ? currentModelConfig.sizes : ALL_SIZES
   const availableQualities = currentModelConfig?.qualities?.length ? currentModelConfig.qualities : ALL_QUALITIES
 
-  const modelName = currentModelConfig?.name || model || '模型'
+  const modelName = getModelDisplayName(model, config?.models || [], '模型') || currentModelConfig?.name || '模型'
   const configLabel = `${modelName} | ${size === 'auto' ? '自动' : size} | ${QUALITY_LABELS[quality] || quality} | ${count}张`
 
   const costPerImage = useMemo(() => {

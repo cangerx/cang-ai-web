@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback, useRef } from 'react'
 import { useAuthStore } from '@/stores/auth'
 import { useSiteStore } from '@/stores/site'
 import api from '@/lib/api'
+import { getModelDisplayName } from '@/lib/model-display'
 import { toast } from '@/components/ui/Toaster'
 import { PaymentModal } from './PaymentModal'
 
@@ -806,7 +807,7 @@ export function SettingsModal({ open, onClose }: Props) {
                               <div style={{ flex: 1, minWidth: 0 }}>
                                 <div className="usage-item-desc" style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
                                   <span>{appLabel}</span>
-                                  {item.model_name && <span style={{ fontSize: 11, color: '#71717a', background: '#f4f4f5', padding: '1px 6px', borderRadius: 4 }}>{item.model_name}</span>}
+                                  {getModelDisplayName(item.model_name, config?.models || []) && <span style={{ fontSize: 11, color: '#71717a', background: '#f4f4f5', padding: '1px 6px', borderRadius: 4 }}>{getModelDisplayName(item.model_name, config?.models || [])}</span>}
                                   {item.quality && <span style={{ fontSize: 11, color: '#71717a' }}>· {QUALITY_LABELS[item.quality] || item.quality}</span>}
                                   {refunded && <span style={{ fontSize: 10, color: '#16a34a', background: '#dcfce7', padding: '1px 6px', borderRadius: 4, fontWeight: 600 }}>已退还</span>}
                                 </div>
