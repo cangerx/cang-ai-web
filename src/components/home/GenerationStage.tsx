@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState, useCallback } from 'react'
+import { memo, useEffect, useRef, useState, useCallback } from 'react'
 import { useGeneratorStore } from '@/stores/generator'
 import api from '@/lib/api'
 import { downloadImage } from '@/lib/download'
@@ -73,14 +73,18 @@ const POLL_INTERVAL = 3000
 const POLL_TIMEOUT = 30 * 60 * 1000
 const MAX_CONSECUTIVE_ERRORS = 30
 
-export function GenerationStage() {
-  const { activeTaskId, generating, setGenerating, setActiveTaskId, prompt: genPrompt, model, size, quality, count } = useGeneratorStore()
+export const GenerationStage = memo(function GenerationStage() {
+  const activeTaskId = useGeneratorStore((state) => state.activeTaskId)
+  const setGenerating = useGeneratorStore((state) => state.setGenerating)
+  const setActiveTaskId = useGeneratorStore((state) => state.setActiveTaskId)
   const [status, setStatus] = useState<'idle' | 'processing' | 'done' | 'error'>('idle')
   const [images, setImages] = useState<string[]>([])
   const [entered, setEntered] = useState<Set<number>>(new Set())
   const [taskPrompt, setTaskPrompt] = useState('')
   const [taskModel, setTaskModel] = useState('')
   const [taskSize, setTaskSize] = useState('')
+  const [taskQuality, setTaskQuality] = useState('')
+  const [taskCount, setTaskCount] = useState(1)
   const [info, setInfo] = useState('未生成图片')
   const [promptExpanded, setPromptExpanded] = useState(false)
   const [lightbox, setLightbox] = useState<string | null>(null)
@@ -116,13 +120,16 @@ export function GenerationStage() {
 
   useEffect(() => {
     if (!activeTaskId) return
+    const snapshot = useGeneratorStore.getState()
     setStatus('processing')
     setImages([])
     setEntered(new Set())
     setInfo('生成中...')
-    setTaskPrompt(genPrompt)
-    setTaskModel(model)
-    setTaskSize(size)
+    setTaskPrompt(snapshot.prompt)
+    setTaskModel(snapshot.model)
+    setTaskSize(snapshot.size)
+    setTaskQuality(snapshot.quality)
+    setTaskCount(snapshot.count || 1)
     pollStartRef.current = Date.now()
     errCountRef.current = 0
     startLoadingMessages()
@@ -150,6 +157,7 @@ export function GenerationStage() {
           const items: Array<{ url?: string }> = task.items || data.items || []
           const imgs = items.filter(it => it.url).map(it => it.url!)
           setImages(imgs)
+          if (imgs.length > 0) setTaskCount(imgs.length)
           if (task.prompt) setTaskPrompt(task.prompt)
           if (task.model) setTaskModel(task.model)
           if (task.size) setTaskSize(task.size)
@@ -201,7 +209,7 @@ export function GenerationStage() {
     }
     poll()
     return stopPolling
-  }, [activeTaskId, setGenerating, stopPolling, startLoadingMessages, genPrompt, model, size])
+  }, [activeTaskId, setGenerating, stopPolling, startLoadingMessages])
 
   const handleClose = () => {
     stopPolling()
@@ -248,7 +256,7 @@ export function GenerationStage() {
 
   if (status === 'idle' && !activeTaskId) return null
 
-  const tags = [taskModel, taskSize, quality, `${count}张`].filter(Boolean)
+  const tags = [taskModel, taskSize, taskQuality, `${taskCount}张`].filter(Boolean)
 
   return (
     <>
@@ -285,7 +293,7 @@ export function GenerationStage() {
         <div className="preview-box">
           <div className="preview-grid">
             {status === 'processing' && (
-              Array.from({ length: Math.max((count || 1) - images.length, 0) }).map((_, i) => (
+              Array.from({ length: Math.max((taskCount || 1) - images.length, 0) }).map((_, i) => (
                 <div key={`loading-${i}`} className="preview-item loading">
                   <div className="loading-shimmer" />
                   <div className="loading-grid" />
@@ -346,4 +354,4 @@ export function GenerationStage() {
       )}
     </>
   )
-}
+})
