@@ -6,6 +6,7 @@ import { useSiteStore } from '@/stores/site'
 import api from '@/lib/api'
 import { downloadImage } from '@/lib/download'
 import { getModelDisplayName } from '@/lib/model-display'
+import { getTaskImageUrls } from '@/lib/task-images'
 import { toast } from '@/components/ui/Toaster'
 
 const STATUS_LABELS: Record<string, string> = {
@@ -89,7 +90,7 @@ export const GenerationStage = memo(function GenerationStage() {
   const [taskCount, setTaskCount] = useState(1)
   const [info, setInfo] = useState('未生成图片')
   const [promptExpanded, setPromptExpanded] = useState(false)
-  const [lightbox, setLightbox] = useState<string | null>(null)
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null)
   const [badgeMsg, setBadgeMsg] = useState('')
   const [statusMsg, setStatusMsg] = useState('')
   const pollRef = useRef<ReturnType<typeof setTimeout> | null>(null)
@@ -157,8 +158,7 @@ export const GenerationStage = memo(function GenerationStage() {
 
         if (taskStatus === 'completed') {
           stopPolling()
-          const items: Array<{ url?: string }> = task.items || data.items || []
-          const imgs = items.filter(it => it.url).map(it => it.url!)
+          const imgs = getTaskImageUrls({ ...data, ...task })
           setImages(imgs)
           if (imgs.length > 0) setTaskCount(imgs.length)
           if (task.prompt) setTaskPrompt(task.prompt)
@@ -187,8 +187,7 @@ export const GenerationStage = memo(function GenerationStage() {
         }
 
         // Progressive results: show partial images while processing
-        const partialItems: Array<{ url?: string }> = task.items || data.items || []
-        const partialUrls = partialItems.filter(it => it.url).map(it => it.url!)
+        const partialUrls = getTaskImageUrls({ ...data, ...task })
         if (partialUrls.length > 0) {
           setImages(partialUrls)
           partialUrls.forEach((_: string, i: number) => {
@@ -222,6 +221,7 @@ export const GenerationStage = memo(function GenerationStage() {
     setActiveTaskId('')
     setStatus('idle')
     setImages([])
+    setLightboxIndex(null)
     setEntered(new Set())
     setInfo('未生成图片')
     setGenerating(false)
@@ -263,6 +263,7 @@ export const GenerationStage = memo(function GenerationStage() {
   if (status === 'idle' && !activeTaskId) return null
 
   const tags = [taskModel, taskSize, taskQuality, `${taskCount}张`].filter(Boolean)
+  const lightboxUrl = lightboxIndex !== null ? images[lightboxIndex] : null
 
   return (
     <>
@@ -320,7 +321,7 @@ export const GenerationStage = memo(function GenerationStage() {
             )}
             {images.map((url, i) => (
               <div key={`img-${i}`} className={`preview-item${entered.has(i) ? ' enter' : ''}`}>
-                <img src={url} alt={`Result ${i + 1}`} onClick={() => setLightbox(url)} />
+                <img src={url} alt={`Result ${i + 1}`} onClick={() => setLightboxIndex(i)} />
               </div>
             ))}
             {images.length === 0 && status !== 'processing' && status !== 'error' && (
@@ -353,9 +354,22 @@ export const GenerationStage = memo(function GenerationStage() {
         </div>
       </article>
 
-      {lightbox && (
-        <div className="lightbox-overlay" onClick={() => setLightbox(null)}>
-          <img src={lightbox} alt="" />
+      {lightboxUrl && (
+        <div className="lightbox-overlay" onClick={() => setLightboxIndex(null)}>
+          {images.length > 1 && (
+            <button className="gallery-lb-nav prev" type="button" onClick={(e) => { e.stopPropagation(); setLightboxIndex((i) => i === null ? 0 : (i - 1 + images.length) % images.length) }}>‹</button>
+          )}
+          <img src={lightboxUrl} alt="" onClick={(e) => e.stopPropagation()} />
+          {images.length > 1 && (
+            <>
+              <button className="gallery-lb-nav next" type="button" onClick={(e) => { e.stopPropagation(); setLightboxIndex((i) => i === null ? 0 : (i + 1) % images.length) }}>›</button>
+              <div className="gallery-lb-dots">
+                {images.map((_, i) => (
+                  <span key={i} className={i === lightboxIndex ? 'active' : ''} onClick={(e) => { e.stopPropagation(); setLightboxIndex(i) }} />
+                ))}
+              </div>
+            </>
+          )}
         </div>
       )}
     </>

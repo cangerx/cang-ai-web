@@ -1348,7 +1348,9 @@ details[open] > .section-toggle .toggle-arrow { transform: rotate(90deg); }
   border-color: rgba(0,0,0,0.08);
 }
 .sub-task-img { aspect-ratio: 1 / 1; background: #f4f4f5; overflow: hidden; }
+.sub-task-img-btn { width: 100%; border: 0; padding: 0; display: block; position: relative; cursor: zoom-in; }
 .sub-task-img img { width: 100%; height: 100%; object-fit: cover; }
+.sub-task-count { position: absolute; right: 8px; bottom: 8px; padding: 3px 8px; border-radius: 999px; background: rgba(0,0,0,0.58); color: #fff; font-size: 11px; font-weight: 700; backdrop-filter: blur(8px); }
 .sub-task-body { padding: 12px 14px; }
 .sub-task-prompt {
   font-size: 12px; color: #71717a; line-height: 1.4;
