@@ -1,5 +1,6 @@
 import defaultTheme from '@/themes/default/theme.config'
 import chatgptLikeTheme from '@/themes/chatgpt-like/theme.config'
+import ghiblioTheme from '@/themes/ghiblio/theme.config'
 import type { ThemeDefinition, ThemeSummary } from './types'
 
 /**
@@ -16,6 +17,7 @@ import type { ThemeDefinition, ThemeSummary } from './types'
 export const themes: Record<string, ThemeDefinition> = {
   [defaultTheme.key]: defaultTheme,
   [chatgptLikeTheme.key]: chatgptLikeTheme,
+  [ghiblioTheme.key]: ghiblioTheme,
 }
 
 export const DEFAULT_THEME_KEY = defaultTheme.key

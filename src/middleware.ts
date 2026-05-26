@@ -5,7 +5,7 @@ const THEME_COOKIE = 'cang_theme'
 const THEME_QUERY = 'theme'
 // 与 src/lib/theme/registry.ts 保持同步。Edge runtime 不便 import 完整 registry，
 // 这里维护一份纯字符串白名单，新增模板时记得同步加入。
-const ALLOWED_THEMES = new Set<string>(['default', 'chatgpt-like'])
+const ALLOWED_THEMES = new Set<string>(['default', 'chatgpt-like', 'ghiblio'])
 
 export function middleware(request: NextRequest) {
   // 将当前 Host 传递给 API 请求，后端用于识别分站
