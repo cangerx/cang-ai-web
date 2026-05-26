@@ -2,7 +2,7 @@ export async function downloadImage(url?: string | null) {
   if (!url || typeof window === 'undefined') return
 
   let fallbackFilename = url.split('/').pop()?.split('?')[0] || 'image.png'
-  const proxyUrl = `/api/download?url=${encodeURIComponent(url)}&filename=${encodeURIComponent(fallbackFilename)}&_=${Date.now()}`
+  const proxyUrl = `/image-download?url=${encodeURIComponent(url)}&filename=${encodeURIComponent(fallbackFilename)}&_=${Date.now()}`
 
   try {
     // 尝试通过 Fetch 直接获取图片 Blob，避免跳转并支持重命名
