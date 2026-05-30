@@ -706,30 +706,31 @@
   right: 0;
   z-index: 100;
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto; /* Changed first column to auto to prevent logo squishing */
+  grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
-  gap: 18px;
-  height: 30px;
-  padding: 0 max(14px, calc((100vw - 1200px) / 2));
-  background: rgba(0, 0, 0, 0.72);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(255,255,255,0.08);
+  gap: 24px;
+  height: 64px;
+  padding: 0 max(16px, calc((100vw - 1200px) / 2));
+  background: rgba(18, 14, 10, 0.88);
+  backdrop-filter: blur(16px) saturate(120%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
 }
 
 .ghiblio-logo {
   color: #fff;
-  font-size: 17px;
+  font-size: 20px;
   line-height: 1;
   text-decoration: none;
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
 }
 
 .ghiblio-logo-text {
-  font-size: 14px;
+  font-size: 22px;
   font-weight: 900;
-  letter-spacing: 0.04em;
+  letter-spacing: -0.5px;
   font-family: "Noto Serif SC", "Songti SC", "LXGW WenKai Screen", serif;
   background: linear-gradient(135deg, #ffffff, #f7dfb6);
   -webkit-background-clip: text;
@@ -741,7 +742,7 @@
 .ghiblio-nav-actions {
   display: flex;
   align-items: center;
-  gap: 18px;
+  gap: 24px;
 }
 
 .ghiblio-nav-main a,
@@ -750,9 +751,9 @@
 .ghiblio-nav-actions button {
   border: 0;
   background: transparent;
-  color: rgba(255, 255, 255, 0.85);
+  color: rgba(255, 255, 255, 0.88);
   font: inherit;
-  font-size: 11.5px;
+  font-size: 14.5px;
   font-weight: 700;
   text-decoration: none;
   white-space: nowrap;
@@ -764,7 +765,7 @@
 .ghiblio-nav-main button:hover,
 .ghiblio-nav-actions a:hover,
 .ghiblio-nav-actions button:hover {
-  color: #d97732 !important; /* Ghibli active accent orange */
+  color: #d97732 !important;
 }
 
 .ghiblio-nav-main a.active,
@@ -775,9 +776,9 @@
 
 .ghiblio-nav-main b {
   display: inline-flex;
-  margin-left: 3px;
-  padding: 1px 4px;
-  border-radius: 3px;
+  margin-left: 4px;
+  padding: 1px 5px;
+  border-radius: 4px;
   background: #ff2828;
   color: #fff;
   font-size: 9px;
@@ -785,26 +786,53 @@
 }
 
 .ghiblio-nav-actions .upgrade {
-  padding: 6px 16px;
-  border-radius: 3px;
+  padding: 8px 18px;
+  border-radius: 999px;
   background: #e62220;
-  box-shadow: 0 9px 22px -12px rgba(230, 34, 32, 0.9);
+  box-shadow: 0 6px 16px -6px rgba(230, 34, 32, 0.9);
+  font-size: 13.5px !important;
+  font-weight: 800 !important;
+  color: #ffffff !important;
+  transition: all 0.2s ease;
 }
 
-.ghiblio-nav-actions .language,
-.ghiblio-nav-actions .hero-login {
-  padding: 5px 11px;
-  border-radius: 4px;
-  background: #061015;
+.ghiblio-nav-actions .upgrade:hover {
+  transform: translateY(-1.5px);
+  background: #ff2826 !important;
+  box-shadow: 0 8px 20px -4px rgba(230, 34, 32, 0.9);
+}
+
+.ghiblio-nav-actions .language {
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  font-size: 13px !important;
+  color: #ffffff !important;
+}
+
+.ghiblio-nav-actions .language:hover {
+  background: rgba(255, 255, 255, 0.14) !important;
 }
 
 .ghiblio-nav-actions .hero-login {
   position: static;
-  min-height: 24px;
-  max-width: 96px;
-  padding: 0 10px;
-  background: #fff;
-  color: #111;
+  min-height: 38px;
+  max-width: 140px;
+  padding: 0 16px;
+  background: #ffffff;
+  color: #111111;
+  border-radius: 999px;
+  font-size: 13.5px !important;
+  font-weight: 800 !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: all 0.25s ease;
+}
+
+.ghiblio-nav-actions .hero-login:hover {
+  transform: translateY(-1.5px);
+  background: #fffcf4 !important;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.16);
 }
 
 .ghiblio-hero-content {
@@ -812,7 +840,7 @@
   z-index: 2;
   width: min(820px, calc(100vw - 40px));
   margin: 0 auto;
-  padding-top: 92px;
+  padding-top: 124px;
   text-align: center;
 }
 
@@ -1229,13 +1257,26 @@
 
 @media (max-width: 980px) {
   .ghiblio-topbar {
-    grid-template-columns: 32px 1fr;
+    grid-template-columns: auto 1fr;
+    height: 56px;
+    gap: 16px;
     padding: 0 14px;
+  }
+
+  .ghiblio-logo-text {
+    font-size: 18px !important;
   }
 
   .ghiblio-nav-main {
     overflow-x: auto;
-    gap: 14px;
+    gap: 16px;
+    height: 100%;
+    align-items: center;
+  }
+
+  .ghiblio-nav-main a,
+  .ghiblio-nav-main button {
+    font-size: 13.5px !important;
   }
 
   .ghiblio-nav-actions {
@@ -1254,6 +1295,10 @@
   .ghiblio-style-grid {
     grid-template-columns: repeat(3, 1fr);
   }
+
+  .ghiblio-hero-content {
+    padding-top: 108px !important;
+  }
 }
 
 @media (max-width: 640px) {
@@ -1263,7 +1308,7 @@
 
   .ghiblio-hero-content {
     width: calc(100vw - 22px);
-    padding-top: 78px;
+    padding-top: 96px !important;
   }
 
   .ghiblio-hero-content h1 {

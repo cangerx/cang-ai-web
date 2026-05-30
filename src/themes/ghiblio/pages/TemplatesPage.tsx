@@ -156,7 +156,7 @@ export default function TemplatesPage() {
       </nav>
 
       {/* Main Content Area */}
-      <div className="ghiblio-content-wrap pt-20 px-4 max-w-[1240px] mx-auto pb-24">
+      <div className="ghiblio-content-wrap pt-28 px-4 max-w-[1240px] mx-auto pb-24">
         {/* Title */}
         <header className="mb-8 mt-4 text-left">
           <h1 className="text-2xl font-extrabold flex items-center gap-2">
