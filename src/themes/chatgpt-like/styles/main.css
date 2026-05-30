@@ -136,7 +136,7 @@
 /* 页面顶部大标题 */
 .cgl-header {
   text-align: center;
-  margin: 40px 0 20px;
+  margin: 12px 0 8px;
   animation: heroIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
@@ -183,8 +183,8 @@
   justify-content: center !important;
   position: relative !important;
   z-index: 10 !important;
-  margin-top: 24px !important;
-  margin-bottom: 24px !important; /* 给下方预留充足的空间，防止重叠 */
+  margin-top: 8px !important;
+  margin-bottom: 4px !important; /* 紧凑排列，防止间距过远 */
   pointer-events: auto !important;
   order: 0 !important;
   animation: heroIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.08s both !important;
@@ -272,6 +272,7 @@
 /* ─── 垂直间距自适应高度拉伸 ─── */
 .cgl-main:not(.cgl-generating) {
   justify-content: center !important;
+  gap: 12px !important;
 }
 
 .cgl-stage {
