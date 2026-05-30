@@ -26,9 +26,9 @@ export async function renderThemePage(pageKey: string) {
   if (!Page) notFound()
 
   return (
-    <>
+    <div className={`theme-viewport theme-${themeKey}-wrapper`}>
       <ThemeTokens tokens={theme.tokens} />
       <Page />
-    </>
+    </div>
   )
 }

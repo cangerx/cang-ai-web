@@ -2560,3 +2560,519 @@
 .ghiblio-page .tpl-modal-submit:active:not(:disabled) {
   transform: scale(0.98) !important;
 }
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+/* 🌳 GHIBLIO GENERATION STAGE (生成结果区域) OVERRIDES      */
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.ghiblio-page .generation-stage {
+  background: #fffdf7 !important;
+  border: 3px solid #5c4228 !important;
+  border-bottom-width: 6px !important; /* Thick cozy base border */
+  border-radius: 26px 26px 14px 14px !important;
+  box-shadow: 0 24px 64px -12px rgba(78, 52, 28, 0.38), 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+  padding: 24px !important;
+  margin: 20px 0 24px !important;
+}
+
+.ghiblio-page .generation-stage .section-head h2 {
+  color: #332719 !important;
+  font-family: "Noto Serif SC", "Songti SC", "LXGW WenKai Screen", serif !important;
+  font-size: 20px !important;
+  font-weight: 900 !important;
+}
+
+.ghiblio-page .generation-stage .section-head .status {
+  background: rgba(217, 119, 50, 0.1) !important;
+  border: 1px solid rgba(217, 119, 50, 0.15) !important;
+  color: #d97732 !important;
+  border-radius: 6px !important;
+  padding: 3px 8px !important;
+  font-weight: 850 !important;
+  font-size: 11px !important;
+}
+
+.ghiblio-page .generation-stage .section-head .status .dot {
+  background: #d97732 !important;
+  box-shadow: 0 0 8px #d97732 !important;
+}
+
+.ghiblio-page .generation-stage .section-head .mini-ghost-btn {
+  background: rgba(92, 66, 40, 0.06) !important;
+  border: 1.5px solid rgba(92, 66, 40, 0.12) !important;
+  color: #5c4228 !important;
+  border-radius: 999px !important;
+  padding: 6px 14px !important;
+  font-size: 13px !important;
+  font-weight: 800 !important;
+  transition: all 0.2s ease !important;
+}
+
+.ghiblio-page .generation-stage .section-head .mini-ghost-btn:hover {
+  background: rgba(92, 66, 40, 0.12) !important;
+  color: #d97732 !important;
+  transform: translateY(-1px) !important;
+}
+
+.ghiblio-page .generation-stage .stage-summary {
+  background: rgba(255, 252, 245, 0.7) !important;
+  border: 1.5px solid rgba(92, 66, 40, 0.12) !important;
+  border-radius: 16px !important;
+  padding: 14px 16px !important;
+  margin-bottom: 16px !important;
+}
+
+.ghiblio-page .generation-stage .stage-prompt {
+  color: #332719 !important;
+  font-size: 13.5px !important;
+  line-height: 1.6 !important;
+  font-weight: 750 !important;
+}
+
+.ghiblio-page .generation-stage .stage-tag {
+  background: #ffffff !important;
+  border: 1px solid rgba(92, 66, 40, 0.12) !important;
+  color: #7a6346 !important;
+  border-radius: 6px !important;
+  font-size: 11px !important;
+  font-weight: 800 !important;
+}
+
+.ghiblio-page .generation-stage .preview-item.loading {
+  background: #fdf9f2 !important;
+  border: 2.5px dashed rgba(92, 66, 40, 0.22) !important;
+  border-radius: 16px !important;
+}
+
+.ghiblio-page .generation-stage .loading-badge {
+  background: rgba(18, 14, 10, 0.85) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  color: #ffffff !important;
+  border-radius: 999px !important;
+}
+
+.ghiblio-page .generation-stage .loading-status .status-text {
+  color: #7a6346 !important;
+  font-weight: 800 !important;
+  font-size: 13.5px !important;
+}
+
+.ghiblio-page .generation-stage .preview-item img {
+  border: 2.5px solid #5c4228 !important;
+  border-radius: 16px !important;
+  box-shadow: 0 6px 16px rgba(78, 52, 28, 0.12) !important;
+  transition: all 0.28s ease !important;
+}
+
+.ghiblio-page .generation-stage .preview-item img:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 10px 24px rgba(78, 52, 28, 0.24) !important;
+}
+
+.ghiblio-page .generation-stage .result-actions a {
+  background: linear-gradient(135deg, #e59a45, #bb6132) !important;
+  border: 1.5px solid #95481b !important;
+  color: #ffffff !important;
+  border-radius: 999px !important;
+  padding: 8px 18px !important;
+  font-size: 13px !important;
+  font-weight: 800 !important;
+  box-shadow: 0 4px 12px rgba(187, 97, 50, 0.25) !important;
+  transition: all 0.2s ease !important;
+}
+
+.ghiblio-page .generation-stage .result-actions a:hover {
+  background: linear-gradient(135deg, #ffb35c, #d56e39) !important;
+  transform: translateY(-1.5px) !important;
+  box-shadow: 0 6px 16px rgba(187, 97, 50, 0.35) !important;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+/* 🏮 THEME GHIBLIO INNER PAGES & FALLBACK ROUTE STYLES   */
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.theme-ghiblio-wrapper .sub-page {
+  background: #fbf0d8 !important;
+}
+
+.theme-ghiblio-wrapper .sub-nav {
+  background: rgba(18, 14, 10, 0.88) !important;
+  backdrop-filter: blur(16px) saturate(120%) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15) !important;
+  height: 64px !important;
+}
+
+.theme-ghiblio-wrapper .sub-nav-inner {
+  height: 64px !important;
+}
+
+.theme-ghiblio-wrapper .sub-nav-brand {
+  color: #ffffff !important;
+  font-family: "Noto Serif SC", "Songti SC", "LXGW WenKai Screen", serif !important;
+  font-size: 20px !important;
+  font-weight: 900 !important;
+  background: linear-gradient(135deg, #ffffff, #f7dfb6) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+}
+
+.theme-ghiblio-wrapper .sub-nav-back {
+  color: rgba(255, 255, 255, 0.85) !important;
+  font-weight: 700 !important;
+  font-size: 13.5px !important;
+  background: rgba(255, 255, 255, 0.06) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 999px !important;
+  padding: 6px 14px !important;
+  transition: all 0.2s ease !important;
+}
+
+.theme-ghiblio-wrapper .sub-nav-back:hover {
+  background: rgba(255, 255, 255, 0.12) !important;
+  color: #d97732 !important;
+}
+
+.theme-ghiblio-wrapper .sub-nav-user {
+  background: #ffffff !important;
+  border: 1.5px solid rgba(92, 66, 40, 0.15) !important;
+  border-radius: 999px !important;
+  padding: 4px 12px 4px 4px !important;
+  box-shadow: 0 2px 6px rgba(78, 52, 28, 0.08) !important;
+  transition: all 0.2s ease !important;
+}
+
+.theme-ghiblio-wrapper .sub-nav-user:hover {
+  transform: translateY(-1px) !important;
+  background: #fffcf4 !important;
+  box-shadow: 0 4px 12px rgba(78, 52, 28, 0.12) !important;
+}
+
+.theme-ghiblio-wrapper .sub-nav-credits {
+  color: #5c4228 !important;
+  font-weight: 800 !important;
+}
+
+.theme-ghiblio-wrapper .sub-nav-login {
+  background: #ffffff !important;
+  color: #111111 !important;
+  font-weight: 800 !important;
+  border-radius: 999px !important;
+  padding: 7px 16px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+  transition: all 0.2s ease !important;
+}
+
+.theme-ghiblio-wrapper .sub-nav-login:hover {
+  transform: translateY(-1px) !important;
+  background: #fffcf4 !important;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.16) !important;
+}
+
+.theme-ghiblio-wrapper .sub-header h1 {
+  color: #332719 !important;
+  font-family: "Noto Serif SC", "Songti SC", "LXGW WenKai Screen", serif !important;
+  font-weight: 900 !important;
+  font-size: 30px !important;
+}
+
+.theme-ghiblio-wrapper .sub-header p {
+  color: #7a6346 !important;
+  font-weight: 500 !important;
+}
+
+/* --- PRICING PAGE OVERRIDES --- */
+.theme-ghiblio-wrapper .pricing-hero {
+  background: rgba(255, 252, 242, 0.8) !important;
+  border: 3px solid #5c4228 !important;
+  border-radius: 24px !important;
+  box-shadow: 0 16px 40px -10px rgba(78, 52, 28, 0.16) !important;
+}
+
+.theme-ghiblio-wrapper .pricing-icon {
+  background: #d97732 !important;
+  box-shadow: 0 6px 18px rgba(217, 119, 50, 0.3) !important;
+  border-radius: 16px !important;
+  color: #fff !important;
+}
+
+.theme-ghiblio-wrapper .pricing-label {
+  color: #7a6346 !important;
+  font-weight: 700 !important;
+}
+
+.theme-ghiblio-wrapper .pricing-amount {
+  color: #332719 !important;
+  font-weight: 900 !important;
+}
+
+.theme-ghiblio-wrapper .pricing-rules-card {
+  background: #fffdf7 !important;
+  border: 3px solid #5c4228 !important;
+  border-radius: 20px !important;
+  box-shadow: 0 16px 40px -10px rgba(78, 52, 28, 0.16) !important;
+}
+
+.theme-ghiblio-wrapper .pricing-rules-head {
+  border-bottom: 2px solid rgba(92, 66, 40, 0.12) !important;
+  color: #332719 !important;
+  background: #fdfaf2 !important;
+  font-weight: 850 !important;
+  font-family: "Noto Serif SC", "Songti SC", serif !important;
+}
+
+.theme-ghiblio-wrapper .pricing-table th {
+  background: #fdfaf2 !important;
+  color: #7a6346 !important;
+  border-bottom: 2px solid rgba(92, 66, 40, 0.1) !important;
+  font-weight: 800 !important;
+}
+
+.theme-ghiblio-wrapper .pricing-table td {
+  color: #332719 !important;
+  border-bottom: 1.5px solid rgba(92, 66, 40, 0.08) !important;
+  font-weight: 700 !important;
+}
+
+.theme-ghiblio-wrapper .pricing-table tr:hover td {
+  background: #fcf6eb !important;
+}
+
+.theme-ghiblio-wrapper .pricing-cta a {
+  background: linear-gradient(135deg, #e59a45, #bb6132) !important;
+  border: 2px solid #95481b !important;
+  box-shadow: 0 6px 20px rgba(187, 97, 50, 0.35) !important;
+  color: #fff !important;
+  border-radius: 999px !important;
+  font-weight: 900 !important;
+}
+
+.theme-ghiblio-wrapper .pricing-cta a:hover {
+  background: linear-gradient(135deg, #ffb35c, #d56e39) !important;
+  transform: translateY(-1.5px) !important;
+  box-shadow: 0 8px 24px rgba(187, 97, 50, 0.45) !important;
+}
+
+/* --- DISTRIBUTION PAGE OVERRIDES --- */
+.theme-ghiblio-wrapper .dist-invite-card {
+  border: 3px solid #5c4228 !important;
+  border-radius: 20px !important;
+}
+
+.theme-ghiblio-wrapper .dist-stat {
+  background: #fffdf7 !important;
+  border: 2px solid #5c4228 !important;
+  border-radius: 16px !important;
+  box-shadow: 0 8px 24px rgba(78, 52, 28, 0.08) !important;
+}
+
+.theme-ghiblio-wrapper .dist-stat-icon.green {
+  background: rgba(217, 119, 50, 0.1) !important;
+  color: #d97732 !important;
+}
+
+.theme-ghiblio-wrapper .dist-stat-icon.blue {
+  background: rgba(99, 74, 45, 0.06) !important;
+  color: #7a6346 !important;
+}
+
+.theme-ghiblio-wrapper .dist-stat-value {
+  color: #332719 !important;
+}
+
+.theme-ghiblio-wrapper .dist-stat-label {
+  color: #7a6346 !important;
+  font-weight: 700 !important;
+}
+
+.theme-ghiblio-wrapper .dist-list {
+  background: #fffdf7 !important;
+  border: 2.5px solid #5c4228 !important;
+  border-radius: 16px !important;
+  box-shadow: 0 10px 30px rgba(78, 52, 28, 0.08) !important;
+}
+
+.theme-ghiblio-wrapper .dist-list-head {
+  background: #fdfaf2 !important;
+  border-bottom: 2px solid rgba(92, 66, 40, 0.12) !important;
+  color: #332719 !important;
+  font-weight: 900 !important;
+}
+
+.theme-ghiblio-wrapper .dist-list-row {
+  color: #332719 !important;
+  border-bottom: 1.5px solid rgba(92, 66, 40, 0.08) !important;
+}
+
+.theme-ghiblio-wrapper .dist-list-row:hover {
+  background: #fcf6eb !important;
+}
+
+.theme-ghiblio-wrapper .dist-apply {
+  background: rgba(255, 252, 242, 0.8) !important;
+  border: 3px solid #5c4228 !important;
+  border-radius: 24px !important;
+}
+
+.theme-ghiblio-wrapper .dist-apply-icon {
+  background: rgba(217, 119, 50, 0.1) !important;
+  color: #d97732 !important;
+  border-radius: 16px !important;
+}
+
+.theme-ghiblio-wrapper .dist-apply-btn {
+  background: linear-gradient(135deg, #e59a45, #bb6132) !important;
+  border: 2px solid #95481b !important;
+  color: #fff !important;
+  border-radius: 999px !important;
+  font-weight: 900 !important;
+  box-shadow: 0 6px 16px rgba(187, 97, 50, 0.25) !important;
+}
+
+/* --- TASKS PAGE OVERRIDES --- */
+.theme-ghiblio-wrapper .sub-task-card {
+  background: #fffdf7 !important;
+  border: 2.5px solid #5c4228 !important;
+  border-radius: 20px !important;
+  box-shadow: var(--shadow-soft) !important;
+}
+
+.theme-ghiblio-wrapper .sub-task-card:hover {
+  transform: translateY(-4px) !important;
+  box-shadow: var(--shadow) !important;
+}
+
+.theme-ghiblio-wrapper .sub-task-img {
+  border-bottom: 2.5px solid #5c4228 !important;
+}
+
+.theme-ghiblio-wrapper .sub-task-prompt {
+  color: #332719 !important;
+  font-weight: 800 !important;
+}
+
+.theme-ghiblio-wrapper .sub-status-pill.completed {
+  background: rgba(217, 119, 50, 0.1) !important;
+  color: #d97732 !important;
+  border: 1px solid rgba(217, 119, 50, 0.15) !important;
+}
+
+.theme-ghiblio-wrapper .sub-status-pill.completed::before {
+  background: #d97732 !important;
+}
+
+/* --- EXPLORE PAGE MASONRY OVERRIDES --- */
+.theme-ghiblio-wrapper .sub-masonry-item {
+  border: 3px solid #5c4228 !important;
+  border-radius: 20px !important;
+  box-shadow: var(--shadow-soft) !important;
+  transition: all 0.28s ease !important;
+}
+
+.theme-ghiblio-wrapper .sub-masonry-item:hover {
+  transform: translateY(-4px) !important;
+  box-shadow: var(--shadow) !important;
+}
+
+.theme-ghiblio-wrapper .sub-masonry-overlay {
+  background: linear-gradient(to top, rgba(18, 14, 10, 0.88) 0%, transparent 65%) !important;
+}
+
+.theme-ghiblio-wrapper .sub-masonry-overlay p {
+  font-size: 13px !important;
+  font-weight: 800 !important;
+}
+
+/* --- LIGHTBOX (fullscreen overlay) OVERRIDES --- */
+.theme-ghiblio-wrapper .gallery-lb {
+  background: rgba(18, 14, 10, 0.72) !important;
+  backdrop-filter: blur(14px) saturate(120%) !important;
+}
+
+.theme-ghiblio-wrapper .gallery-lb-inner {
+  background: #fffdf7 !important;
+  border: 3px solid #5c4228 !important;
+  border-radius: 24px !important;
+  box-shadow: 0 32px 80px -16px rgba(76, 51, 24, 0.45) !important;
+}
+
+.theme-ghiblio-wrapper .gallery-lb-img {
+  background: #1c1815 !important;
+  border-right: 3px solid #5c4228 !important;
+}
+
+@media (max-width: 880px) {
+  .theme-ghiblio-wrapper .gallery-lb-img {
+    border-right: none !important;
+    border-bottom: 3px solid #5c4228 !important;
+  }
+}
+
+.theme-ghiblio-wrapper .gallery-lb-info {
+  color: #332719 !important;
+  background: #fffdf7 !important;
+}
+
+.theme-ghiblio-wrapper .gallery-lb-prompt {
+  background: rgba(99, 74, 45, 0.05) !important;
+  border: 1px solid rgba(99, 74, 45, 0.1) !important;
+  border-radius: 12px !important;
+  color: #332719 !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+}
+
+.theme-ghiblio-wrapper .gallery-lb-meta span {
+  background: rgba(217, 119, 50, 0.1) !important;
+  color: #d97732 !important;
+  font-weight: 800 !important;
+  border-radius: 6px !important;
+  border: 1px solid rgba(217, 119, 50, 0.12) !important;
+}
+
+.theme-ghiblio-wrapper .gallery-lb-actions button {
+  background: rgba(255, 255, 255, 0.6) !important;
+  border: 1.5px solid rgba(99, 74, 45, 0.15) !important;
+  color: #5c4228 !important;
+  border-radius: 999px !important;
+  font-weight: 800 !important;
+  padding: 8px 18px !important;
+  transition: all 0.2s ease !important;
+}
+
+.theme-ghiblio-wrapper .gallery-lb-actions button:hover {
+  background: #ffffff !important;
+  border-color: #d97732 !important;
+  color: #d97732 !important;
+}
+
+.theme-ghiblio-wrapper .gallery-lb-actions button.primary {
+  background: linear-gradient(135deg, #e59a45, #bb6132) !important;
+  border: 2px solid #95481b !important;
+  color: #fff !important;
+  box-shadow: 0 4px 12px rgba(187, 97, 50, 0.25) !important;
+}
+
+.theme-ghiblio-wrapper .gallery-lb-actions button.primary:hover {
+  background: linear-gradient(135deg, #ffb35c, #d56e39) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 6px 16px rgba(187, 97, 50, 0.35) !important;
+}
+
+.theme-ghiblio-wrapper .gallery-lb-close {
+  background: rgba(92, 66, 40, 0.08) !important;
+  color: #7a6346 !important;
+  border-radius: 12px !important;
+  width: 34px !important;
+  height: 34px !important;
+  font-size: 16px !important;
+  font-weight: 800 !important;
+  transition: all 0.2s ease !important;
+}
+
+.theme-ghiblio-wrapper .gallery-lb-close:hover {
+  background: rgba(230, 34, 32, 0.08) !important;
+  color: #e62220 !important;
+  transform: scale(1.08) rotate(90deg) !important;
+}
