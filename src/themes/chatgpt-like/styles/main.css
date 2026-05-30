@@ -1,7 +1,8 @@
-/* chatgpt-like 模板私有样式
- * 仅在 HomePage 顶部 import，Next.js 会把它打到该路由的 CSS chunk
- * 避免污染默认模板。 */
+/* ==========================================================================
+   ChatGPT 风模板私有样式 (cgl-*)
+   ========================================================================== */
 
+/* ─── 整体布局外壳 ─── */
 .cgl-shell {
   position: relative;
   z-index: 1;
@@ -10,117 +11,341 @@
   min-height: 100vh;
   min-height: 100dvh;
   background: var(--bg);
+  transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
+/* ─── 高级暗色质感侧栏 ─── */
 .cgl-sidebar {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  padding: 24px 16px;
-  background: rgba(0, 0, 0, 0.025);
-  border-right: 1px solid var(--line);
+  gap: 8px;
+  padding: 28px 18px;
+  background: linear-gradient(180deg, #171719 0%, #0f0f10 100%);
+  border-right: 1px solid rgba(255, 255, 255, 0.04);
   position: sticky;
   top: 0;
   height: 100vh;
   height: 100dvh;
+  z-index: 100;
+  box-shadow: 10px 0 30px -15px rgba(0, 0, 0, 0.3);
 }
 
+/* 侧栏 LOGO / 品牌 */
 .cgl-brand {
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--text);
-  padding: 4px 12px 16px;
-  border-bottom: 1px solid var(--line);
-  margin-bottom: 12px;
+  font-family: "Noto Sans SC", sans-serif;
+  font-size: 20px;
+  font-weight: 800;
+  color: #ffffff;
+  padding: 4px 12px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  margin-bottom: 16px;
+  letter-spacing: -0.5px;
+  background: linear-gradient(135deg, #ffffff 0%, rgba(255, 255, 255, 0.8) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 2px 10px rgba(255, 255, 255, 0.02);
 }
 
+/* 侧栏动作按钮 */
 .cgl-sidebar-action {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 10px 12px;
-  border-radius: 10px;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 12px;
   background: transparent;
-  border: 0;
-  color: var(--text-secondary);
+  border: 1px solid transparent;
+  color: #a1a1aa;
   font-size: 14px;
+  font-weight: 500;
   cursor: pointer;
   text-align: left;
-  transition: background 0.15s, color 0.15s;
+  transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
   text-decoration: none;
 }
 
 .cgl-sidebar-action:hover {
-  background: var(--accent-soft);
-  color: var(--accent);
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.04);
+  color: #ffffff;
+  transform: translateX(2px);
 }
 
-.cgl-sidebar-action > span:first-child {
+.cgl-sidebar-action:active {
+  transform: scale(0.97) translateX(2px);
+}
+
+.cgl-sidebar-action .action-icon {
   font-size: 16px;
   color: var(--accent);
+  transition: transform 0.2s;
+  display: inline-block;
 }
 
-.cgl-sidebar-spacer { flex: 1; }
+.cgl-sidebar-action:hover .action-icon {
+  transform: scale(1.18) rotate(10deg);
+}
 
+.cgl-sidebar-spacer {
+  flex: 1;
+}
+
+/* 侧栏用户面板区域 */
 .cgl-sidebar-user {
-  padding-top: 12px;
-  border-top: 1px solid var(--line);
+  padding-top: 18px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
 }
 
+/* 强制重置侧栏中的 HeroLogin 在暗色底下的质感 */
+.cgl-sidebar-user .hero-login {
+  position: static;
+  display: flex;
+  width: 100%;
+  max-width: none;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  color: #e4e4e7;
+  padding: 10px 16px;
+}
+
+.cgl-sidebar-user .hero-login:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  color: #ffffff;
+}
+
+.cgl-sidebar-user .hero-login #keyLabel {
+  color: #e4e4e7;
+}
+
+/* ─── 右侧中央主栏区域 ─── */
 .cgl-main {
   display: flex;
   flex-direction: column;
-  gap: 28px;
-  padding: 56px max(24px, 6vw) 120px;
-  max-width: 880px;
+  gap: 32px;
+  padding: 64px max(24px, 6vw) 140px;
+  max-width: 900px;
   margin: 0 auto;
   width: 100%;
+  min-height: 100vh;
+  position: relative;
+}
+
+/* 页面顶部大标题 */
+.cgl-header {
+  text-align: center;
+  margin: 40px 0 20px;
+  animation: heroIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .cgl-header h1 {
-  font-size: 36px;
-  font-weight: 700;
-  margin: 0 0 8px;
+  font-size: 38px;
+  font-weight: 800;
+  margin: 0 0 10px;
   color: var(--text);
-  letter-spacing: -0.5px;
+  letter-spacing: -0.8px;
+  line-height: 1.25;
 }
 
 .cgl-header p {
   margin: 0;
   color: var(--text-secondary);
-  font-size: 15px;
+  font-size: 16px;
+  font-weight: 400;
 }
 
+/* 生成状态下的标题淡化 */
+.cgl-generating .cgl-header {
+  opacity: 0.45;
+  filter: blur(0.5px);
+  transition: all 0.5s ease;
+}
+
+/* ─── 核心组件区块排布 ─── */
 .cgl-mode,
 .cgl-stage,
 .cgl-composer {
   width: 100%;
 }
 
-.cgl-composer {
-  position: sticky;
-  bottom: 16px;
-  padding: 16px;
-  background: var(--panel-strong);
-  backdrop-filter: var(--glass);
-  border: 1px solid var(--line);
-  border-radius: 18px;
-  box-shadow: var(--shadow-soft);
+/* 让默认 ModeCards 布局贴合 ChatGPT 风的简约设计 */
+.cgl-mode {
+  animation: heroIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.08s both;
 }
 
-.cgl-generating .cgl-header { opacity: 0.7; }
+.cgl-shell .mode-cards {
+  justify-content: center;
+  margin-bottom: 0;
+}
 
+/* ─── 重点：优雅扁平化的输入框容器 (Composer Override) ─── */
+.cgl-composer {
+  position: sticky;
+  bottom: 24px;
+  z-index: 90;
+  width: 100%;
+  background: transparent;
+  padding: 0;
+  border: 0;
+  box-shadow: none;
+  backdrop-filter: none;
+}
+
+/* 去除默认 Composer 的“双重套娃边框”与“阴影”，升级为扁平悬浮风格 */
+.cgl-shell .composer {
+  background: var(--panel-strong) !important;
+  backdrop-filter: var(--glass) !important;
+  border: 1px solid var(--line-strong) !important;
+  border-radius: 22px !important;
+  box-shadow: var(--shadow) !important;
+  padding: 20px 22px 14px !important;
+  animation: rise 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.12s both !important;
+}
+
+.cgl-shell .composer:focus-within {
+  border-color: rgba(var(--accent), 0.3) !important;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08), 0 0 0 2px var(--accent-glow) !important;
+}
+
+/* 调整输入框里面的字体及间距 */
+.cgl-shell .composer .prompt {
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+/* ─── 拖拽遮罩层 ─── */
+.drop-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(var(--accent), 0.04);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.25s ease;
+  pointer-events: none;
+}
+
+.drop-overlay-content {
+  text-align: center;
+  padding: 40px 60px;
+  border-radius: 28px;
+  background: var(--panel-strong);
+  border: 2px dashed var(--accent);
+  box-shadow: var(--shadow);
+  color: var(--text);
+  transform: scale(0.96);
+  animation: lightboxIn 0.3s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.drop-icon {
+  margin-bottom: 16px;
+  color: var(--accent);
+  display: flex;
+  justify-content: center;
+  animation: pulseSoft 1.5s infinite;
+}
+
+.drop-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.drop-sub {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+/* ─── 移动端自适应布局 ─── */
 @media (max-width: 880px) {
-  .cgl-shell { grid-template-columns: 1fr; }
-  .cgl-sidebar {
-    position: relative;
-    height: auto;
-    flex-direction: row;
-    overflow-x: auto;
-    padding: 12px 16px;
+  .cgl-shell {
+    grid-template-columns: 1fr;
   }
-  .cgl-sidebar-spacer { display: none; }
-  .cgl-sidebar-user { border-top: 0; padding-top: 0; }
-  .cgl-main { padding: 24px 16px 96px; }
-  .cgl-header h1 { font-size: 26px; }
+  
+  .cgl-sidebar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: auto;
+    height: 72px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    padding: 10px 16px;
+    border-right: 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.2);
+    border-radius: 18px 18px 0 0;
+    gap: 0;
+  }
+  
+  .cgl-brand {
+    display: none;
+  }
+  
+  .cgl-sidebar-action {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 6px;
+    gap: 3px;
+    font-size: 11px;
+    border-radius: 8px;
+  }
+  
+  .cgl-sidebar-action .action-icon {
+    font-size: 18px;
+  }
+  
+  .cgl-sidebar-action:hover {
+    transform: none;
+  }
+  
+  .cgl-sidebar-spacer {
+    display: none;
+  }
+  
+  .cgl-sidebar-user {
+    border-top: 0;
+    padding-top: 0;
+    margin: 0;
+  }
+  
+  .cgl-sidebar-user .hero-login {
+    padding: 6px 12px;
+    font-size: 11px;
+  }
+  
+  .cgl-sidebar-user .hero-login-avatar,
+  .cgl-sidebar-user .hero-login-initial {
+    width: 18px;
+    height: 18px;
+    font-size: 9px;
+  }
+  
+  /* 主体区域底部预留导航栏高度 */
+  .cgl-main {
+    padding: 32px 16px 110px;
+  }
+  
+  .cgl-header {
+    margin: 16px 0 10px;
+  }
+  
+  .cgl-header h1 {
+    font-size: 28px;
+  }
+  
+  .cgl-header p {
+    font-size: 14px;
+  }
+  
+  .cgl-composer {
+    bottom: 84px; /* 避开底部导航栏 */
+  }
 }
