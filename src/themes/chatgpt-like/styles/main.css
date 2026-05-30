@@ -173,11 +173,73 @@
 /* 让默认 ModeCards 布局贴合 ChatGPT 风的简约设计 */
 .cgl-mode {
   animation: heroIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.08s both;
+  width: 100%;
 }
 
+/* 简约高级的 3 列网格平铺布局，移除重叠和旋转 */
 .cgl-shell .mode-cards {
-  justify-content: center;
-  margin-bottom: 0;
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 16px !important;
+  max-width: 620px !important;
+  margin: 12px auto 0 !important;
+  pointer-events: auto !important;
+  order: 0 !important;
+  align-items: stretch !important;
+}
+
+.cgl-shell .mode-card {
+  width: auto !important;
+  margin: 0 !important;
+  transform: none !important;
+  border-radius: 16px !important;
+  border: 1px solid var(--line-strong) !important;
+  background: var(--panel) !important;
+  backdrop-filter: var(--glass) !important;
+  padding: 18px 16px 20px !important;
+  box-shadow: var(--shadow-soft) !important;
+  transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1) !important;
+}
+
+.cgl-shell .mode-card:hover {
+  transform: translateY(-4px) !important;
+  background: var(--panel-strong) !important;
+  border-color: rgba(var(--accent), 0.25) !important;
+  box-shadow: var(--shadow) !important;
+}
+
+/* 激活状态：使用精致的品牌主色发光细边框，取代原有的 38px 剧烈弹跳 */
+.cgl-shell .mode-card.active {
+  background: var(--panel-strong) !important;
+  border-color: var(--accent) !important;
+  box-shadow: 0 8px 30px -10px var(--accent-glow) !important;
+  color: var(--text) !important;
+  transform: translateY(-2px) !important;
+  border-width: 2px !important;
+}
+
+.cgl-shell .mode-card.active .mode-card-title {
+  color: var(--accent) !important;
+  font-weight: 800 !important;
+}
+
+.cgl-shell .mode-card.active .mode-card-sub {
+  color: var(--text-secondary) !important;
+}
+
+/* 彻底移除默认的旋转与不规则 z-index 偏移 */
+.cgl-shell .mode-card:nth-child(n) {
+  transform: none !important;
+  z-index: 1 !important;
+}
+
+/* ─── 垂直间距自适应高度拉伸 ─── */
+.cgl-stage {
+  flex: 1 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  min-height: 120px !important;
 }
 
 /* ─── 重点：优雅扁平化的输入框容器 (Composer Override) ─── */
