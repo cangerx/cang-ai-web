@@ -67,8 +67,7 @@ export default function HomePage() {
 
   useEffect(() => {
     fetchConfig()
-    fetchMe?.()
-  }, [fetchConfig, fetchMe])
+  }, [fetchConfig])
 
   useEffect(() => {
     if (config?.site_name) {
