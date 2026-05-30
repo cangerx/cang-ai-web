@@ -270,12 +270,22 @@
 }
 
 /* ─── 垂直间距自适应高度拉伸 ─── */
+.cgl-main:not(.cgl-generating) {
+  justify-content: center !important;
+}
+
 .cgl-stage {
-  flex: 1 !important;
+  display: none !important;
+}
+
+.cgl-generating .cgl-stage {
   display: flex !important;
+  flex: 1 !important;
   flex-direction: column !important;
   justify-content: center !important;
   min-height: 120px !important;
+  margin-top: 16px !important;
+  margin-bottom: 16px !important;
 }
 
 /* ─── 重点：优雅扁平化的输入框容器 (Composer Override) ─── */
