@@ -1,5 +1,6 @@
 import type { ThemeDefinition } from '@/lib/theme/types'
 import HomePage from './pages/HomePage'
+import TemplatesPage from './pages/TemplatesPage'
 
 const theme: ThemeDefinition = {
   key: 'ghiblio',
@@ -7,8 +8,9 @@ const theme: ThemeDefinition = {
   description: '温暖手绘感首页，突出 AI 艺术创作、作品社区和轻量工作台。',
   pages: {
     home: HomePage,
+    templates: TemplatesPage,
   },
-  features: ['home'],
+  features: ['home', 'templates'],
   tokens: {
     bg: '#fbf0d8',
     'bg-secondary': '#fff8ea',

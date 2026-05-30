@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback, useRef } from 'react'
+import { createPortal } from 'react-dom'
 import { useAuthStore } from '@/stores/auth'
 import { useSiteStore } from '@/stores/site'
 import api from '@/lib/api'
@@ -19,6 +20,11 @@ interface Props {
 export function SettingsModal({ open, onClose }: Props) {
   const { user, login, register, logout, fetchMe } = useAuthStore()
   const { config } = useSiteStore()
+
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   const [panel, setPanel] = useState<Panel>('login')
   const [loginMethod, setLoginMethod] = useState<LoginMethod>('password')
@@ -290,7 +296,9 @@ export function SettingsModal({ open, onClose }: Props) {
   const title = panel === 'login' ? '欢迎回来' : panel === 'register' ? '创建账号' : panel === 'forgot' ? '找回密码' : '个人中心'
   const subtitle = panel === 'login' ? `登录继续使用 ${siteName}` : panel === 'register' ? `注册加入 ${siteName}` : panel === 'forgot' ? '验证后设置新密码' : ''
 
-  return (
+  if (!mounted) return null
+
+  return createPortal(
     <div className={`settings-modal${open ? ' open' : ''}`} onClick={onClose}>
       <div className={`settings-card${panel === 'profile' ? ' wide' : ''}`} role="dialog" aria-label="账号" onClick={(e) => e.stopPropagation()}>
         {panel !== 'profile' && (
@@ -940,6 +948,7 @@ export function SettingsModal({ open, onClose }: Props) {
         onClose={() => { setActiveOrder(null); loadProfileData(); loadOrderHistory() }}
         onPaid={() => { toast('充值成功，积分已到账', 'success'); loadProfileData(); loadOrderHistory() }}
       />
-    </div>
+    </div>,
+    document.body
   )
 }
