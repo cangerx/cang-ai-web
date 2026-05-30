@@ -220,6 +220,33 @@ export default function HomePage() {
     }
   }
 
+  // Reverse Prompt handler
+  const handleReverse = async () => {
+    if (!user) { openSettings(); return }
+    if (files.length === 0) return toast('请先上传参考图片', 'error')
+    setGenerating(true)
+    try {
+      const url = await uploadImage(files[0])
+      if (!url) throw new Error('图片上传失败，请重试')
+      const { data } = await api.post('/reverse-prompt', {
+        image_url: url,
+        prompt: prompt.trim() || undefined,
+      })
+      if (data.prompt) {
+        setPrompt(data.prompt)
+        setMode('text')
+        setFiles([])
+        toast('提示词反推成功，已自动填入输入框', 'success')
+      } else {
+        throw new Error('反推失败，请重试')
+      }
+    } catch (err: any) {
+      toast(err.response?.data?.error || err.message || '反推失败', 'error')
+    } finally {
+      setGenerating(false)
+    }
+  }
+
   return (
     <main className={`ghiblio-page${generating || activeTaskId ? ' is-generating' : ''}`}>
       <section className="ghiblio-hero-scene">
@@ -271,8 +298,8 @@ export default function HomePage() {
             <div className="ghiblio-composer-tabs">
               <button
                 type="button"
-                className={mode === 'text' && count === 1 ? 'active' : ''}
-                onClick={() => { setMode('text'); setCount(1) }}
+                className={mode === 'text' ? 'active' : ''}
+                onClick={() => { setMode('text') }}
               >
                 文生图
               </button>
@@ -285,10 +312,10 @@ export default function HomePage() {
               </button>
               <button
                 type="button"
-                className={mode === 'text' && count > 1 ? 'active' : ''}
-                onClick={() => { setMode('text'); setCount(4) }}
+                className={mode === 'reverse' ? 'active' : ''}
+                onClick={() => { setMode('reverse'); setFiles([]) }}
               >
-                批量生图
+                提示词反推
               </button>
             </div>
 
@@ -296,11 +323,11 @@ export default function HomePage() {
               <textarea
                 value={prompt}
                 onChange={(e) => setPrompt(e.target.value)}
-                placeholder="输入要求，AI生成图片"
+                placeholder={mode === 'reverse' ? '（可选）在此输入特定的反推指令或引导词...' : '输入要求，AI生成图片...'}
                 className="ghiblio-composer-textarea"
               />
 
-              {mode === 'image' && (
+              {(mode === 'image' || mode === 'reverse') && (
                 <div className="ghiblio-composer-upload-area">
                   {files.map((file, i) => (
                     <div key={i} className="ghiblio-composer-upload-preview">
@@ -309,13 +336,13 @@ export default function HomePage() {
                       <button type="button" onClick={() => setFiles(files.filter((_, idx) => idx !== i))}>×</button>
                     </div>
                   ))}
-                  {files.length < 4 && (
+                  {files.length < (mode === 'reverse' ? 1 : 4) && (
                     <label className="ghiblio-composer-upload-btn">
                       <input
                         type="file"
                         accept="image/*"
-                        multiple
-                        onChange={(e) => setFiles([...files, ...Array.from(e.target.files || [])].slice(0, 4))}
+                        multiple={mode !== 'reverse'}
+                        onChange={(e) => setFiles([...files, ...Array.from(e.target.files || [])].slice(0, mode === 'reverse' ? 1 : 4))}
                         className="hidden"
                       />
                       <span>+ 上传图片</span>
@@ -326,173 +353,182 @@ export default function HomePage() {
             </div>
 
             {/* Dropdown selectors row */}
-            <div className="ghiblio-composer-options">
-              {/* Model select */}
-              <div className="ghiblio-dropdown-wrap">
-                <button
-                  type="button"
-                  className={`ghiblio-option-btn ${activeDropdown === 'model' ? 'active' : ''}`}
-                  onClick={() => setActiveDropdown(activeDropdown === 'model' ? null : 'model')}
-                >
-                  ⚙️ {currentModelName} <span>ˇ</span>
-                </button>
-                {activeDropdown === 'model' && (
-                  <div className="ghiblio-dropdown-popover">
-                    {(config?.models || []).map((m) => (
-                      <button
-                        key={m.id}
-                        type="button"
-                        className={model === m.id ? 'selected' : ''}
-                        onClick={() => { setModel(m.id); setActiveDropdown(null) }}
-                      >
-                        {m.name}
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
+            {mode !== 'reverse' && (
+              <div className="ghiblio-composer-options">
+                {/* Model select */}
+                <div className="ghiblio-dropdown-wrap">
+                  <button
+                    type="button"
+                    className={`ghiblio-option-btn ${activeDropdown === 'model' ? 'active' : ''}`}
+                    onClick={() => setActiveDropdown(activeDropdown === 'model' ? null : 'model')}
+                  >
+                    ⚙️ {currentModelName} <span>ˇ</span>
+                  </button>
+                  {activeDropdown === 'model' && (
+                    <div className="ghiblio-dropdown-popover">
+                      {(config?.models || []).map((m) => (
+                        <button
+                          key={m.id}
+                          type="button"
+                          className={model === m.id ? 'selected' : ''}
+                          onClick={() => { setModel(m.id); setActiveDropdown(null) }}
+                        >
+                          {m.name}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
 
-              {/* Style preset */}
-              <div className="ghiblio-dropdown-wrap">
-                <button
-                  type="button"
-                  className={`ghiblio-option-btn ${activeDropdown === 'style' ? 'active' : ''}`}
-                  onClick={() => setActiveDropdown(activeDropdown === 'style' ? null : 'style')}
-                >
-                  🚫 自定义风格 <span>ˇ</span>
-                </button>
-                {activeDropdown === 'style' && (
-                  <div className="ghiblio-dropdown-popover">
-                    {GHIBLIO_STYLES.map((s) => (
-                      <button
-                        key={s.name}
-                        type="button"
-                        onClick={() => {
-                          const separator = prompt.trim() ? ', ' : ''
-                          setPrompt(`${prompt}${separator}${s.prompt}`)
-                          toast(`已应用 "${s.name}" 风格提示词`, 'success')
-                          setActiveDropdown(null)
-                        }}
-                      >
-                        {s.name}
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
+                {/* Style preset */}
+                <div className="ghiblio-dropdown-wrap">
+                  <button
+                    type="button"
+                    className={`ghiblio-option-btn ${activeDropdown === 'style' ? 'active' : ''}`}
+                    onClick={() => setActiveDropdown(activeDropdown === 'style' ? null : 'style')}
+                  >
+                    🚫 自定义风格 <span>ˇ</span>
+                  </button>
+                  {activeDropdown === 'style' && (
+                    <div className="ghiblio-dropdown-popover">
+                      {GHIBLIO_STYLES.map((s) => (
+                        <button
+                          key={s.name}
+                          type="button"
+                          onClick={() => {
+                            const separator = prompt.trim() ? ', ' : ''
+                            setPrompt(`${prompt}${separator}${s.prompt}`)
+                            toast(`已应用 "${s.name}" 风格提示词`, 'success')
+                            setActiveDropdown(null)
+                          }}
+                        >
+                          {s.name}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
 
-              {/* Aspect Ratio select */}
-              <div className="ghiblio-dropdown-wrap">
-                <button
-                  type="button"
-                  className={`ghiblio-option-btn ${activeDropdown === 'size' ? 'active' : ''}`}
-                  onClick={() => setActiveDropdown(activeDropdown === 'size' ? null : 'size')}
-                >
-                  🗂️ {size === 'auto' ? '自动' : size} <span>ˇ</span>
-                </button>
-                {activeDropdown === 'size' && (
-                  <div className="ghiblio-dropdown-popover">
-                    {availableSizes.map((s) => (
-                      <button
-                        key={s}
-                        type="button"
-                        className={size === s ? 'selected' : ''}
-                        onClick={() => { setSize(s); setActiveDropdown(null) }}
-                      >
-                        {s === 'auto' ? '自动尺寸' : s}
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
+                {/* Aspect Ratio select */}
+                <div className="ghiblio-dropdown-wrap">
+                  <button
+                    type="button"
+                    className={`ghiblio-option-btn ${activeDropdown === 'size' ? 'active' : ''}`}
+                    onClick={() => setActiveDropdown(activeDropdown === 'size' ? null : 'size')}
+                  >
+                    🗂️ {size === 'auto' ? '自动' : size} <span>ˇ</span>
+                  </button>
+                  {activeDropdown === 'size' && (
+                    <div className="ghiblio-dropdown-popover">
+                      {availableSizes.map((s) => (
+                        <button
+                          key={s}
+                          type="button"
+                          className={size === s ? 'selected' : ''}
+                          onClick={() => { setSize(s); setActiveDropdown(null) }}
+                        >
+                          {s === 'auto' ? '自动尺寸' : s}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
 
-              {/* Quality select */}
-              <div className="ghiblio-dropdown-wrap">
-                <button
-                  type="button"
-                  className={`ghiblio-option-btn ${activeDropdown === 'quality' ? 'active' : ''}`}
-                  onClick={() => setActiveDropdown(activeDropdown === 'quality' ? null : 'quality')}
-                >
-                  ⇆ {QUALITY_LABELS[quality] || quality} <span>ˇ</span>
-                </button>
-                {activeDropdown === 'quality' && (
-                  <div className="ghiblio-dropdown-popover">
-                    {availableQualities.map((q) => (
-                      <button
-                        key={q}
-                        type="button"
-                        className={quality === q ? 'selected' : ''}
-                        onClick={() => { setQuality(q); setActiveDropdown(null) }}
-                      >
-                        {QUALITY_LABELS[q] || q}
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
+                {/* Quality select */}
+                <div className="ghiblio-dropdown-wrap">
+                  <button
+                    type="button"
+                    className={`ghiblio-option-btn ${activeDropdown === 'quality' ? 'active' : ''}`}
+                    onClick={() => setActiveDropdown(activeDropdown === 'quality' ? null : 'quality')}
+                  >
+                    ⇆ {QUALITY_LABELS[quality] || quality} <span>ˇ</span>
+                  </button>
+                  {activeDropdown === 'quality' && (
+                    <div className="ghiblio-dropdown-popover">
+                      {availableQualities.map((q) => (
+                        <button
+                          key={q}
+                          type="button"
+                          className={quality === q ? 'selected' : ''}
+                          onClick={() => { setQuality(q); setActiveDropdown(null) }}
+                        >
+                          {QUALITY_LABELS[q] || q}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
 
-              {/* Count select */}
-              <div className="ghiblio-dropdown-wrap">
-                <button
-                  type="button"
-                  className={`ghiblio-option-btn ${activeDropdown === 'count' ? 'active' : ''}`}
-                  onClick={() => setActiveDropdown(activeDropdown === 'count' ? null : 'count')}
-                >
-                  ⚙️ {count}次 <span>ˇ</span>
-                </button>
-                {activeDropdown === 'count' && (
-                  <div className="ghiblio-dropdown-popover">
-                    {[1, 2, 3, 4].map((n) => (
-                      <button
-                        key={n}
-                        type="button"
-                        className={count === n ? 'selected' : ''}
-                        onClick={() => { setCount(n); setActiveDropdown(null) }}
-                      >
-                        生成 {n} 张
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
+                {/* Count select */}
+                <div className="ghiblio-dropdown-wrap">
+                  <button
+                    type="button"
+                    className={`ghiblio-option-btn ${activeDropdown === 'count' ? 'active' : ''}`}
+                    onClick={() => setActiveDropdown(activeDropdown === 'count' ? null : 'count')}
+                  >
+                    ⚙️ {count}次 <span>ˇ</span>
+                  </button>
+                  {activeDropdown === 'count' && (
+                    <div className="ghiblio-dropdown-popover">
+                      {[1, 2, 3, 4].map((n) => (
+                        <button
+                          key={n}
+                          type="button"
+                          className={count === n ? 'selected' : ''}
+                          onClick={() => { setCount(n); setActiveDropdown(null) }}
+                        >
+                          生成 {n} 张
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
 
-              <button type="button" className="ghiblio-option-btn-more">•••</button>
-            </div>
+                <button type="button" className="ghiblio-option-btn-more">•••</button>
+              </div>
+            )}
           </section>
 
           {/* Quick chips below card container */}
           <div className="ghiblio-composer-bottom-row">
-            <button
-              type="button"
-              className="ghiblio-composer-reload-btn"
-              onClick={() => {
-                const randomPrompt = QUICK_PROMPTS[Math.floor(Math.random() * QUICK_PROMPTS.length)]
-                setPrompt(randomPrompt)
-                toast('已随机推荐提示词', 'success')
-              }}
-            >
-              ↻
-            </button>
-            <div className="ghiblio-composer-chips">
-              {QUICK_PROMPTS.map((item) => (
+            {mode !== 'reverse' && (
+              <>
                 <button
-                  key={item}
                   type="button"
-                  className={`ghiblio-composer-chip ${prompt === item ? 'active' : ''}`}
-                  onClick={() => fillPrompt(item)}
+                  className="ghiblio-composer-reload-btn"
+                  onClick={() => {
+                    const randomPrompt = QUICK_PROMPTS[Math.floor(Math.random() * QUICK_PROMPTS.length)]
+                    setPrompt(randomPrompt)
+                    toast('已随机推荐提示词', 'success')
+                  }}
                 >
-                  {item}
+                  ↻
                 </button>
-              ))}
-            </div>
+                <div className="ghiblio-composer-chips">
+                  {QUICK_PROMPTS.map((item) => (
+                    <button
+                      key={item}
+                      type="button"
+                      className={`ghiblio-composer-chip ${prompt === item ? 'active' : ''}`}
+                      onClick={() => fillPrompt(item)}
+                    >
+                      {item}
+                    </button>
+                  ))}
+                </div>
+              </>
+            )}
 
             <button
               type="button"
               className={`ghiblio-composer-submit-btn ${generating ? 'loading' : ''}`}
-              onClick={handleGenerate}
+              onClick={mode === 'reverse' ? handleReverse : handleGenerate}
               disabled={generating}
+              style={mode === 'reverse' ? { marginLeft: 'auto', width: 'auto', minWidth: '180px' } : undefined}
             >
-              {generating ? '生成中' : `生成 (${totalCost} 积分) ➔`}
+              {generating 
+                ? (mode === 'reverse' ? '正在反推...' : '生成中...') 
+                : (mode === 'reverse' ? '开始反推提示词 ➔' : `生成 (${totalCost} 积分) ➔`)}
             </button>
           </div>
 
