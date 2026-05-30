@@ -176,61 +176,97 @@
   width: 100%;
 }
 
-/* 简约高级的 3 列网格平铺布局，移除重叠和旋转 */
+/* 🎨 恢复并优化原版卡片堆叠（保留个性的扇形旋转风格，进行高级视觉微调） */
 .cgl-shell .mode-cards {
-  display: grid !important;
-  grid-template-columns: repeat(3, 1fr) !important;
-  gap: 16px !important;
-  max-width: 620px !important;
-  margin: 12px auto 0 !important;
+  display: flex !important;
+  align-items: flex-end !important;
+  justify-content: center !important;
+  position: relative !important;
+  z-index: 10 !important;
+  margin-top: 24px !important;
+  margin-bottom: 24px !important; /* 给下方预留充足的空间，防止重叠 */
   pointer-events: auto !important;
   order: 0 !important;
-  align-items: stretch !important;
+  animation: heroIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.08s both !important;
 }
 
 .cgl-shell .mode-card {
-  width: auto !important;
-  margin: 0 !important;
-  transform: none !important;
-  border-radius: 16px !important;
-  border: 1px solid var(--line-strong) !important;
-  background: var(--panel) !important;
+  width: 160px !important;
+  padding: 22px 18px 42px !important;
+  border-radius: 16px 16px 6px 6px !important;
+  border: 0 !important;
+  background: var(--panel-strong) !important;
   backdrop-filter: var(--glass) !important;
-  padding: 18px 16px 20px !important;
   box-shadow: var(--shadow-soft) !important;
-  transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1) !important;
+  cursor: pointer !important;
+  position: relative !important;
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), background 0.35s, box-shadow 0.4s, border-color 0.3s !important;
+  z-index: 1 !important;
+  margin-right: -12px !important; /* 稍微减小重叠度，使字迹更加舒展清晰 */
 }
 
-.cgl-shell .mode-card:hover {
-  transform: translateY(-4px) !important;
-  background: var(--panel-strong) !important;
-  border-color: rgba(var(--accent), 0.25) !important;
+.cgl-shell .mode-card:last-child {
+  margin-right: 0 !important;
+}
+
+/* 扇形微妙旋转微调（从 -5°/5° 调整为更优雅的 -3°/3°，更显精致） */
+.cgl-shell .mode-card:nth-child(1) {
+  transform: rotate(-3deg) translateY(4px) !important;
+  z-index: 2 !important;
+  border-left: 4px solid #10a37f !important; /* ChatGPT 经典绿 */
+}
+
+.cgl-shell .mode-card:nth-child(2) {
+  transform: rotate(0deg) translateY(0) !important;
+  z-index: 3 !important;
+  border-left: 4px solid #3b82f6 !important; /* 蓝色 */
+}
+
+.cgl-shell .mode-card:nth-child(3) {
+  transform: rotate(3deg) translateY(4px) !important;
+  z-index: 2 !important;
+  border-left: 4px solid #a855f7 !important; /* 紫色 */
+}
+
+/* 悬浮交互动效 */
+.cgl-shell .mode-card:not(.active):hover {
+  transform: rotate(0deg) translateY(-8px) scale(1.04) !important;
+  z-index: 8 !important;
   box-shadow: var(--shadow) !important;
 }
 
-/* 激活状态：使用精致的品牌主色发光细边框，取代原有的 38px 剧烈弹跳 */
+/* 重点优化：激活状态的优雅升起与发光 */
 .cgl-shell .mode-card.active {
-  background: var(--panel-strong) !important;
-  border-color: var(--accent) !important;
-  box-shadow: 0 8px 30px -10px var(--accent-glow) !important;
-  color: var(--text) !important;
-  transform: translateY(-2px) !important;
-  border-width: 2px !important;
+  transform: rotate(0deg) translateY(-20px) scale(1.06) !important; /* 优雅微升 -20px，避免升起过高破坏主栏比例 */
+  z-index: 10 !important;
+  border-left-color: transparent !important;
+  color: #ffffff !important;
 }
 
+/* 激活状态下的炫彩底色与阴影适配 */
+.cgl-shell .mode-card.active:nth-child(1) {
+  background: linear-gradient(135deg, #10a37f 0%, #0d8366 100%) !important;
+  box-shadow: 0 14px 32px -6px rgba(16, 163, 127, 0.42) !important;
+}
+
+.cgl-shell .mode-card.active:nth-child(2) {
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%) !important;
+  box-shadow: 0 14px 32px -6px rgba(59, 130, 246, 0.42) !important;
+}
+
+.cgl-shell .mode-card.active:nth-child(3) {
+  background: linear-gradient(135deg, #a855f7 0%, #7c3aed 100%) !important;
+  box-shadow: 0 14px 32px -6px rgba(168, 85, 247, 0.42) !important;
+}
+
+/* 激活状态下的文字颜色覆盖 */
 .cgl-shell .mode-card.active .mode-card-title {
-  color: var(--accent) !important;
+  color: #ffffff !important;
   font-weight: 800 !important;
 }
 
 .cgl-shell .mode-card.active .mode-card-sub {
-  color: var(--text-secondary) !important;
-}
-
-/* 彻底移除默认的旋转与不规则 z-index 偏移 */
-.cgl-shell .mode-card:nth-child(n) {
-  transform: none !important;
-  z-index: 1 !important;
+  color: rgba(255, 255, 255, 0.88) !important;
 }
 
 /* ─── 垂直间距自适应高度拉伸 ─── */
