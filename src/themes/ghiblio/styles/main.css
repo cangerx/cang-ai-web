@@ -1753,7 +1753,7 @@
 /* ──────────────────────────────────────────────────────── */
 
 /* Overlay */
-.settings-modal {
+.theme-ghiblio-wrapper .settings-modal {
   background: rgba(44, 33, 22, 0.48) !important;
   backdrop-filter: blur(14px) saturate(140%) !important;
   display: none;
@@ -1761,12 +1761,12 @@
   justify-content: center !important;
   padding: 20px !important;
 }
-.settings-modal.open {
+.theme-ghiblio-wrapper .settings-modal.open {
   display: flex !important;
 }
 
 /* Card */
-.settings-card {
+.theme-ghiblio-wrapper .settings-card {
   background: #fdfaf2 !important; /* Soft warm-beige organic paper background */
   border: 2px solid #5c4228 !important; /* Hand-drawn style dark warm-brown border */
   border-radius: 20px !important;
@@ -1778,7 +1778,7 @@
   padding: 24px 28px !important; /* More compact padding! */
 }
 
-.settings-card.wide {
+.theme-ghiblio-wrapper .settings-card.wide {
   background: #fdfaf2 !important;
   border: 2px solid #5c4228 !important;
   width: min(720px, 95vw) !important;
@@ -1786,34 +1786,34 @@
 }
 
 /* Title & Headers */
-.settings-head h3,
-.settings-sidebar-title,
-.settings-content-title {
+.theme-ghiblio-wrapper .settings-head h3,
+.theme-ghiblio-wrapper .settings-sidebar-title,
+.theme-ghiblio-wrapper .settings-content-title {
   color: #332719 !important;
   font-family: "Noto Serif SC", "Songti SC", "LXGW WenKai Screen", serif !important;
   font-weight: 900 !important;
 }
 
-.settings-body {
+.theme-ghiblio-wrapper .settings-body {
   gap: 14px !important;
 }
 
-.auth-subtitle {
+.theme-ghiblio-wrapper .auth-subtitle {
   color: #7a6346 !important;
   margin: -8px 0 10px !important;
 }
 
 /* Inputs & Labels */
-.settings-field {
+.theme-ghiblio-wrapper .settings-field {
   gap: 4px !important;
 }
 
-.settings-field label {
+.theme-ghiblio-wrapper .settings-field label {
   color: #7a6346 !important;
   font-weight: 700 !important;
 }
 
-.settings-input {
+.theme-ghiblio-wrapper .settings-input {
   background: rgba(255, 255, 255, 0.72) !important;
   border: 1.5px solid rgba(92, 66, 40, 0.18) !important;
   color: #332719 !important;
@@ -1823,34 +1823,34 @@
   height: 42px !important; /* Slightly more compact input height */
 }
 
-.settings-input:focus {
+.theme-ghiblio-wrapper .settings-input:focus {
   background: #ffffff !important;
   border-color: #d97732 !important;
   box-shadow: 0 0 0 4px rgba(217, 119, 50, 0.14) !important;
 }
 
-.settings-input::placeholder {
+.theme-ghiblio-wrapper .settings-input::placeholder {
   color: #b89c75 !important;
 }
 
 /* Autofill styling */
-.settings-input:-webkit-autofill,
-.settings-input:-webkit-autofill:hover,
-.settings-input:-webkit-autofill:focus {
+.theme-ghiblio-wrapper .settings-input:-webkit-autofill,
+.theme-ghiblio-wrapper .settings-input:-webkit-autofill:hover,
+.theme-ghiblio-wrapper .settings-input:-webkit-autofill:focus {
   -webkit-box-shadow: 0 0 0 1000px #fdfaf2 inset !important;
   -webkit-text-fill-color: #332719 !important;
   border-color: rgba(92, 66, 40, 0.25) !important;
 }
 
 /* Active & Custom Buttons */
-.settings-foot {
+.theme-ghiblio-wrapper .settings-foot {
   gap: 8px !important;
   margin-top: 4px !important;
 }
 
-.settings-foot .black-btn,
-.dist-apply-card .black-btn,
-.recharge-card .black-btn {
+.theme-ghiblio-wrapper .settings-foot .black-btn,
+.theme-ghiblio-wrapper .dist-apply-card .black-btn,
+.theme-ghiblio-wrapper .recharge-card .black-btn {
   background: linear-gradient(135deg, #e9a23b, #d97732) !important;
   border: 1px solid rgba(123, 67, 25, 0.18) !important;
   color: #ffffff !important;

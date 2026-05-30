@@ -822,3 +822,262 @@
   color: #a1a1aa !important;
 }
 
+/* ─── CHATGPT-LIKE THEME: LOGIN & SETTINGS MODAL OVERRIDES (100% ISOLATED) ─── */
+.theme-chatgpt-like-wrapper .settings-modal {
+  background: rgba(0, 0, 0, 0.72) !important;
+  backdrop-filter: blur(20px) saturate(140%) !important;
+  display: flex !important;
+}
+
+.theme-chatgpt-like-wrapper .settings-card {
+  background: rgba(22, 22, 26, 0.85) !important;
+  backdrop-filter: blur(30px) saturate(180%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 24px !important;
+  box-shadow: 0 32px 80px rgba(0, 0, 0, 0.85), inset 0 1px 0 rgba(255, 255, 255, 0.03) !important;
+  color: #ececf1 !important;
+  width: min(420px, 95vw) !important;
+  margin: auto !important;
+  padding: 28px !important;
+  transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1) !important;
+}
+
+.theme-chatgpt-like-wrapper .settings-card.wide {
+  width: min(780px, 95vw) !important;
+  padding: 28px !important;
+}
+
+.theme-chatgpt-like-wrapper .settings-head h3,
+.theme-chatgpt-like-wrapper .settings-sidebar-title,
+.theme-chatgpt-like-wrapper .settings-content-title {
+  color: #ffffff !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.5px !important;
+}
+
+.theme-chatgpt-like-wrapper .auth-subtitle {
+  color: #a1a1aa !important;
+}
+
+.theme-chatgpt-like-wrapper .auth-tabs {
+  background: rgba(255, 255, 255, 0.03) !important;
+  border: 1px solid rgba(255, 255, 255, 0.06) !important;
+  border-radius: 12px !important;
+  padding: 4px !important;
+}
+
+.theme-chatgpt-like-wrapper .auth-tab {
+  border-radius: 8px !important;
+  color: #a1a1aa !important;
+  font-weight: 600 !important;
+}
+
+.theme-chatgpt-like-wrapper .auth-tab.active {
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: #ffffff !important;
+}
+
+.theme-chatgpt-like-wrapper .settings-field label {
+  color: #a1a1aa !important;
+  font-weight: 600 !important;
+}
+
+.theme-chatgpt-like-wrapper .settings-input {
+  background: rgba(255, 255, 255, 0.02) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  color: #ffffff !important;
+  border-radius: 12px !important;
+  transition: all 0.2s ease !important;
+}
+
+.theme-chatgpt-like-wrapper .settings-input:focus {
+  border-color: #10a37f !important;
+  box-shadow: 0 0 0 2px rgba(16, 163, 127, 0.25) !important;
+}
+
+.theme-chatgpt-like-wrapper .verify-btn {
+  background: rgba(16, 163, 127, 0.12) !important;
+  border: 1px solid rgba(16, 163, 127, 0.2) !important;
+  color: #10a37f !important;
+  border-radius: 10px !important;
+  font-weight: 600 !important;
+}
+
+.theme-chatgpt-like-wrapper .verify-btn:hover {
+  background: rgba(16, 163, 127, 0.2) !important;
+}
+
+.theme-chatgpt-like-wrapper .settings-foot .black-btn {
+  background: linear-gradient(135deg, #10a37f, #0d8366) !important;
+  box-shadow: 0 4px 16px rgba(16, 163, 127, 0.25) !important;
+  color: #ffffff !important;
+  border-radius: 12px !important;
+  font-weight: 600 !important;
+  transition: all 0.2s ease !important;
+}
+
+.theme-chatgpt-like-wrapper .settings-foot .black-btn:hover {
+  background: linear-gradient(135deg, #12b78f, #0e9473) !important;
+  transform: translateY(-1px) !important;
+}
+
+.theme-chatgpt-like-wrapper .oauth-divider span {
+  background: #16161a !important;
+  color: #71717a !important;
+}
+
+.theme-chatgpt-like-wrapper .oauth-btn {
+  background: rgba(255, 255, 255, 0.03) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  color: #ffffff !important;
+  border-radius: 12px !important;
+}
+
+.theme-chatgpt-like-wrapper .oauth-btn:hover {
+  background: rgba(255, 255, 255, 0.06) !important;
+}
+
+.theme-chatgpt-like-wrapper .auth-register-text {
+  color: #71717a !important;
+}
+
+.theme-chatgpt-like-wrapper .auth-register-btn {
+  color: #10a37f !important;
+  font-weight: 600 !important;
+}
+
+.theme-chatgpt-like-wrapper .auth-forgot-pill {
+  background: rgba(255, 255, 255, 0.04) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  color: #a1a1aa !important;
+  border-radius: 999px !important;
+}
+
+.theme-chatgpt-like-wrapper .auth-forgot-pill:hover {
+  color: #ffffff !important;
+  border-color: rgba(255, 255, 255, 0.15) !important;
+}
+
+/* Sidebar Inside Profile */
+.theme-chatgpt-like-wrapper .settings-sidebar {
+  border-right: 1px solid rgba(255, 255, 255, 0.06) !important;
+  background: rgba(255, 255, 255, 0.01) !important;
+}
+
+.theme-chatgpt-like-wrapper .settings-nav-item {
+  color: #a1a1aa !important;
+  border-radius: 8px !important;
+}
+
+.theme-chatgpt-like-wrapper .settings-nav-item:hover {
+  background: rgba(255, 255, 255, 0.03) !important;
+  color: #ffffff !important;
+}
+
+.theme-chatgpt-like-wrapper .settings-nav-item.active {
+  background: rgba(16, 163, 127, 0.12) !important;
+  color: #10a37f !important;
+  font-weight: 600 !important;
+}
+
+/* Profile sections */
+.theme-chatgpt-like-wrapper .profile-info-card {
+  background: rgba(255, 255, 255, 0.02) !important;
+  border: 1px solid rgba(255, 255, 255, 0.06) !important;
+  border-radius: 16px !important;
+}
+
+.theme-chatgpt-like-wrapper .settings-section {
+  border-top: 1px solid rgba(255, 255, 255, 0.06) !important;
+}
+
+.theme-chatgpt-like-wrapper .settings-row-label {
+  color: #a1a1aa !important;
+}
+
+.theme-chatgpt-like-wrapper .settings-row-value {
+  color: #ffffff !important;
+}
+
+.theme-chatgpt-like-wrapper .settings-row-action {
+  color: #10a37f !important;
+  font-weight: 600 !important;
+}
+
+.theme-chatgpt-like-wrapper .dist-apply-card {
+  background: rgba(16, 163, 127, 0.06) !important;
+  border: 1px solid rgba(16, 163, 127, 0.15) !important;
+  border-radius: 12px !important;
+}
+
+.theme-chatgpt-like-wrapper .dist-apply-desc {
+  color: #a1a1aa !important;
+}
+
+/* Credits Stats inside Modal */
+.theme-chatgpt-like-wrapper .credits-stat-card {
+  background: rgba(255, 255, 255, 0.02) !important;
+  border: 1px solid rgba(255, 255, 255, 0.06) !important;
+  border-radius: 12px !important;
+}
+
+.theme-chatgpt-like-wrapper .credits-stat-value {
+  color: #ffffff !important;
+}
+
+.theme-chatgpt-like-wrapper .recharge-card {
+  background: rgba(255, 255, 255, 0.02) !important;
+  border: 1px solid rgba(255, 255, 255, 0.05) !important;
+  border-radius: 16px !important;
+}
+
+.theme-chatgpt-like-wrapper .recharge-amount-btn {
+  background: rgba(255, 255, 255, 0.02) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  color: #ffffff !important;
+  border-radius: 10px !important;
+}
+
+.theme-chatgpt-like-wrapper .recharge-amount-btn:hover {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border-color: rgba(255, 255, 255, 0.15) !important;
+}
+
+.theme-chatgpt-like-wrapper .recharge-amount-btn.active {
+  background: rgba(16, 163, 127, 0.12) !important;
+  border-color: #10a37f !important;
+  color: #10a37f !important;
+}
+
+.theme-chatgpt-like-wrapper .usage-card {
+  background: rgba(255, 255, 255, 0.01) !important;
+  border: 1px solid rgba(255, 255, 255, 0.05) !important;
+  border-radius: 16px !important;
+}
+
+.theme-chatgpt-like-wrapper .usage-item {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04) !important;
+}
+
+.theme-chatgpt-like-wrapper .usage-item-desc {
+  color: #ffffff !important;
+}
+
+.theme-chatgpt-like-wrapper .usage-item-date {
+  color: #71717a !important;
+}
+
+.theme-chatgpt-like-wrapper .settings-card .icon-btn {
+  background: rgba(255, 255, 255, 0.04) !important;
+  color: #a1a1aa !important;
+  border-radius: 50% !important;
+  width: 28px !important;
+  height: 28px !important;
+}
+
+.theme-chatgpt-like-wrapper .settings-card .icon-btn:hover {
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: #ffffff !important;
+}
+
+

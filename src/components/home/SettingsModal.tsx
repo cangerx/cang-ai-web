@@ -22,9 +22,19 @@ export function SettingsModal({ open, onClose }: Props) {
   const { config } = useSiteStore()
 
   const [mounted, setMounted] = useState(false)
+  const [themeKey, setThemeKey] = useState('default')
+
   useEffect(() => {
     setMounted(true)
   }, [])
+
+  useEffect(() => {
+    if (open && typeof window !== 'undefined') {
+      const queryTheme = new URLSearchParams(window.location.search).get('theme')
+      const cookieTheme = document.cookie.match(/cang_theme=([^;]+)/)?.[1]
+      setThemeKey(queryTheme || cookieTheme || 'default')
+    }
+  }, [open])
 
   const [panel, setPanel] = useState<Panel>('login')
   const [loginMethod, setLoginMethod] = useState<LoginMethod>('password')
@@ -299,8 +309,9 @@ export function SettingsModal({ open, onClose }: Props) {
   if (!mounted) return null
 
   return createPortal(
-    <div className={`settings-modal${open ? ' open' : ''}`} onClick={onClose}>
-      <div className={`settings-card${panel === 'profile' ? ' wide' : ''}`} role="dialog" aria-label="账号" onClick={(e) => e.stopPropagation()}>
+    <div className={`theme-${themeKey}-wrapper settings-modal-portal`}>
+      <div className={`settings-modal${open ? ' open' : ''}`} onClick={onClose}>
+        <div className={`settings-card${panel === 'profile' ? ' wide' : ''}`} role="dialog" aria-label="账号" onClick={(e) => e.stopPropagation()}>
         {panel !== 'profile' && (
           <div className="settings-head">
             <h3>{title}</h3>
@@ -948,6 +959,7 @@ export function SettingsModal({ open, onClose }: Props) {
         onClose={() => { setActiveOrder(null); loadProfileData(); loadOrderHistory() }}
         onPaid={() => { toast('充值成功，积分已到账', 'success'); loadProfileData(); loadOrderHistory() }}
       />
+      </div>
     </div>,
     document.body
   )
