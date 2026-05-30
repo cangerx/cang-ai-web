@@ -1862,24 +1862,24 @@
   line-height: 40px !important;
 }
 
-.settings-foot .black-btn:hover,
-.dist-apply-card .black-btn:hover,
-.recharge-card .black-btn:hover {
+.theme-ghiblio-wrapper .settings-foot .black-btn:hover,
+.theme-ghiblio-wrapper .dist-apply-card .black-btn:hover,
+.theme-ghiblio-wrapper .recharge-card .black-btn:hover {
   transform: translateY(-2px) !important;
   box-shadow: 0 12px 24px -4px rgba(217, 119, 50, 0.6) !important;
   opacity: 1 !important;
 }
 
-.settings-foot .black-btn:active,
-.dist-apply-card .black-btn:active,
-.recharge-card .black-btn:active {
+.theme-ghiblio-wrapper .settings-foot .black-btn:active,
+.theme-ghiblio-wrapper .dist-apply-card .black-btn:active,
+.theme-ghiblio-wrapper .recharge-card .black-btn:active {
   transform: translateY(0) scale(0.97) !important;
   opacity: 0.9 !important;
 }
 
-.settings-foot .black-btn:disabled,
-.dist-apply-card .black-btn:disabled,
-.recharge-card .black-btn:disabled {
+.theme-ghiblio-wrapper .settings-foot .black-btn:disabled,
+.theme-ghiblio-wrapper .dist-apply-card .black-btn:disabled,
+.theme-ghiblio-wrapper .recharge-card .black-btn:disabled {
   background: rgba(92, 66, 40, 0.18) !important;
   color: #a48a66 !important;
   border-color: transparent !important;
@@ -1889,7 +1889,7 @@
 }
 
 /* Verification row code sending button */
-.verify-btn {
+.theme-ghiblio-wrapper .verify-btn {
   background: #2c2116 !important;
   color: #fff8ea !important;
   border: 1px solid rgba(92, 66, 40, 0.2) !important;
@@ -1901,28 +1901,28 @@
   line-height: 40px !important;
 }
 
-.verify-btn:hover:not(:disabled) {
+.theme-ghiblio-wrapper .verify-btn:hover:not(:disabled) {
   background: #3d2f21 !important;
   transform: translateY(-1px) !important;
   box-shadow: 0 6px 14px rgba(44, 33, 22, 0.2) !important;
 }
 
-.verify-btn:disabled {
+.theme-ghiblio-wrapper .verify-btn:disabled {
   background: rgba(92, 66, 40, 0.12) !important;
   color: #a48a66 !important;
   box-shadow: none !important;
 }
 
 /* Password Toggle Icon */
-.toggle-pwd-btn {
+.theme-ghiblio-wrapper .toggle-pwd-btn {
   color: #a48a66 !important;
 }
-.toggle-pwd-btn:hover {
+.theme-ghiblio-wrapper .toggle-pwd-btn:hover {
   color: #d97732 !important;
 }
 
 /* Tab selector */
-.auth-tabs {
+.theme-ghiblio-wrapper .auth-tabs {
   background: rgba(92, 66, 40, 0.06) !important;
   border: 1.5px solid rgba(92, 66, 40, 0.12) !important;
   padding: 3px !important;
@@ -1930,90 +1930,90 @@
   margin-bottom: 14px !important; /* Tighter margins */
 }
 
-.auth-tab {
+.theme-ghiblio-wrapper .auth-tab {
   color: #7a6346 !important;
   font-weight: 700 !important;
   border-radius: 999px !important;
 }
 
-.auth-tab.active {
+.theme-ghiblio-wrapper .auth-tab.active {
   background: #ffffff !important;
   border-color: rgba(92, 66, 40, 0.15) !important;
   color: #d97732 !important;
   box-shadow: 0 4px 12px rgba(80, 55, 30, 0.12) !important;
 }
 
-.auth-tab:hover:not(.active) {
+.theme-ghiblio-wrapper .auth-tab:hover:not(.active) {
   color: #332719 !important;
   background: rgba(255, 255, 255, 0.4) !important;
 }
 
 /* Agree check */
-.auth-agree {
+.theme-ghiblio-wrapper .auth-agree {
   color: #7a6346 !important;
 }
 
-.auth-agree a {
+.theme-ghiblio-wrapper .auth-agree a {
   color: #d97732 !important;
   font-weight: 700 !important;
 }
 
-.auth-agree input[type="checkbox"] {
+.theme-ghiblio-wrapper .auth-agree input[type="checkbox"] {
   border: 1.5px solid rgba(92, 66, 40, 0.3) !important;
   background: #ffffff !important;
 }
 
-.auth-agree input[type="checkbox"]:checked {
+.theme-ghiblio-wrapper .auth-agree input[type="checkbox"]:checked {
   background: #d97732 !important;
   border-color: #d97732 !important;
 }
 
 /* Links & text link buttons */
-.auth-links .auth-register-text {
+.theme-ghiblio-wrapper .auth-links .auth-register-text {
   color: #a48a66 !important;
 }
 
-.auth-register-btn {
+.theme-ghiblio-wrapper .auth-register-btn {
   color: #d97732 !important;
   font-weight: 900 !important;
 }
 
-.auth-register-btn::after {
+.theme-ghiblio-wrapper .auth-register-btn::after {
   background: #d97732 !important;
 }
 
-.auth-forgot-pill {
+.theme-ghiblio-wrapper .auth-forgot-pill {
   background: rgba(92, 66, 40, 0.06) !important;
   color: #7a6346 !important;
   border-radius: 999px !important;
 }
 
-.auth-forgot-pill:hover {
+.theme-ghiblio-wrapper .auth-forgot-pill:hover {
   background: #f7ede2 !important;
   color: #d97732 !important;
   box-shadow: 0 4px 12px rgba(217, 119, 50, 0.1) !important;
 }
 
-.auth-link-btn {
+.theme-ghiblio-wrapper .auth-link-btn {
   color: #7a6346 !important;
 }
 
-.auth-link-btn:hover {
+.theme-ghiblio-wrapper .auth-link-btn:hover {
   color: #d97732 !important;
 }
 
 /* OAuth Social Logins */
-.oauth-divider::before,
-.oauth-divider::after {
+.theme-ghiblio-wrapper .oauth-divider::before,
+.theme-ghiblio-wrapper .oauth-divider::after {
   background: rgba(92, 66, 40, 0.12) !important;
 }
 
-.oauth-divider span {
+.theme-ghiblio-wrapper .oauth-divider span {
   color: #a48a66 !important;
   font-size: 11px !important;
 }
 
-.oauth-btn {
+.theme-ghiblio-wrapper .oauth-btn {
   background: rgba(255, 255, 255, 0.6) !important;
   border: 1.5px solid rgba(92, 66, 40, 0.15) !important;
   color: #5c4228 !important;
@@ -2024,162 +2024,162 @@
   font-size: 13px !important;
 }
 
-.oauth-btn:hover {
+.theme-ghiblio-wrapper .oauth-btn:hover {
   border-color: #d97732 !important;
   background: #ffffff !important;
   transform: translateY(-1px) !important;
 }
 
-.oauth-btn-wechat:hover {
+.theme-ghiblio-wrapper .oauth-btn-wechat:hover {
   border-color: #07C160 !important;
   color: #07C160 !important;
 }
 
 /* Settings Sidebar (logged in) */
-.settings-sidebar {
+.theme-ghiblio-wrapper .settings-sidebar {
   border-right: 1.5px solid rgba(92, 66, 40, 0.1) !important;
 }
 
-.settings-nav-item {
+.theme-ghiblio-wrapper .settings-nav-item {
   color: #7a6346 !important;
   font-weight: 700 !important;
   border-radius: 10px !important;
   transition: all 0.22s !important;
 }
 
-.settings-nav-item:hover {
+.theme-ghiblio-wrapper .settings-nav-item:hover {
   background: rgba(92, 66, 40, 0.05) !important;
   color: #d97732 !important;
 }
 
-.settings-nav-item.active {
+.theme-ghiblio-wrapper .settings-nav-item.active {
   background: #f7ede2 !important;
   color: #d97732 !important;
   font-weight: 900 !important;
 }
 
-.settings-nav-item svg {
+.theme-ghiblio-wrapper .settings-nav-item svg {
   color: #a48a66 !important;
 }
 
-.settings-nav-item.active svg {
+.theme-ghiblio-wrapper .settings-nav-item.active svg {
   color: #d97732 !important;
 }
 
 /* User profile card */
-.profile-info-card {
+.theme-ghiblio-wrapper .profile-info-card {
   background: rgba(255, 255, 255, 0.4) !important;
   border: 1px dashed rgba(92, 66, 40, 0.18) !important;
   border-radius: 16px !important;
   padding: 16px !important;
 }
 
-.profile-info-avatar {
+.theme-ghiblio-wrapper .profile-info-avatar {
   background: #2c2116 !important;
   color: #fff8ea !important;
   box-shadow: 0 4px 10px rgba(80, 55, 30, 0.15) !important;
 }
 
-.profile-info-name {
+.theme-ghiblio-wrapper .profile-info-name {
   color: #332719 !important;
   font-weight: 900 !important;
 }
 
-.profile-info-bio {
+.theme-ghiblio-wrapper .profile-info-bio {
   color: #a48a66 !important;
 }
 
 /* Settings lists / section rows */
-.settings-section-title {
+.theme-ghiblio-wrapper .settings-section-title {
   color: #332719 !important;
   font-weight: 900 !important;
 }
 
-.settings-row {
+.theme-ghiblio-wrapper .settings-row {
   background: rgba(255, 255, 255, 0.4) !important;
   border: 1px solid rgba(92, 66, 40, 0.08) !important;
   border-radius: 12px !important;
   transition: all 0.2s !important;
 }
 
-.settings-row:hover {
+.theme-ghiblio-wrapper .settings-row:hover {
   background: rgba(255, 255, 255, 0.75) !important;
   border-color: rgba(92, 66, 40, 0.15) !important;
 }
 
-.settings-row-label {
+.theme-ghiblio-wrapper .settings-row-label {
   color: #5c4228 !important;
   font-weight: 700 !important;
 }
 
-.settings-row-label svg {
+.theme-ghiblio-wrapper .settings-row-label svg {
   color: #a48a66 !important;
 }
 
-.settings-row-value {
+.theme-ghiblio-wrapper .settings-row-value {
   color: #7a6346 !important;
 }
 
-.settings-row-action {
+.theme-ghiblio-wrapper .settings-row-action {
   color: #d97732 !important;
   font-weight: 700 !important;
 }
 
-.settings-row-action:hover {
+.theme-ghiblio-wrapper .settings-row-action:hover {
   text-decoration: underline !important;
 }
 
 /* Distributor / Coupon apply cards */
-.dist-apply-card {
+.theme-ghiblio-wrapper .dist-apply-card {
   background: rgba(255, 255, 255, 0.4) !important;
   border: 1px dashed rgba(92, 66, 40, 0.18) !important;
   border-radius: 16px !important;
 }
 
-.dist-apply-desc {
+.theme-ghiblio-wrapper .dist-apply-desc {
   color: #7a6346 !important;
 }
 
 /* Credits Stats Grid */
-.credits-stat-card {
+.theme-ghiblio-wrapper .credits-stat-card {
   background: rgba(255, 255, 255, 0.5) !important;
   border: 1.5px solid rgba(92, 66, 40, 0.1) !important;
   border-radius: 12px !important;
 }
 
-.credits-stat-label {
+.theme-ghiblio-wrapper .credits-stat-label {
   color: #a48a66 !important;
 }
 
-.credits-stat-value {
+.theme-ghiblio-wrapper .credits-stat-value {
   color: #332719 !important;
   font-weight: 900 !important;
 }
 
-.credits-stat-sub {
+.theme-ghiblio-wrapper .credits-stat-sub {
   color: #a48a66 !important;
 }
 
 /* Recharge Package details */
-.recharge-card {
+.theme-ghiblio-wrapper .recharge-card {
   background: rgba(255, 255, 255, 0.45) !important;
   border: 1px dashed rgba(92, 66, 40, 0.18) !important;
   border-radius: 16px !important;
 }
 
-.recharge-title {
+.theme-ghiblio-wrapper .recharge-title {
   color: #332719 !important;
 }
 
-.recharge-points {
+.theme-ghiblio-wrapper .recharge-points {
   color: #78a65a !important; /* Ghibli green style points */
 }
 
-.recharge-points span {
+.theme-ghiblio-wrapper .recharge-points span {
   color: #a48a66 !important;
 }
 
-.recharge-amount-btn {
+.theme-ghiblio-wrapper .recharge-amount-btn {
   background: rgba(255, 255, 255, 0.65) !important;
   border: 1.5px solid rgba(92, 66, 40, 0.15) !important;
   border-radius: 12px !important;
@@ -2188,11 +2188,11 @@
   transition: all 0.2s !important;
 }
 
-.recharge-amount-btn:hover:not(.active) {
+.theme-ghiblio-wrapper .recharge-amount-btn:hover:not(.active) {
   border-color: #d97732 !important;
 }
 
-.recharge-amount-btn.active {
+.theme-ghiblio-wrapper .recharge-amount-btn.active {
   background: #ffffff !important;
   border-color: #d97732 !important;
   color: #d97732 !important;
@@ -2201,87 +2201,87 @@
 }
 
 /* Usage records / tables */
-.usage-card {
+.theme-ghiblio-wrapper .usage-card {
   background: rgba(255, 255, 255, 0.45) !important;
   border: 1px dashed rgba(92, 66, 40, 0.18) !important;
   border-radius: 16px !important;
 }
 
-.usage-card-title {
+.theme-ghiblio-wrapper .usage-card-title {
   color: #332719 !important;
   font-weight: 900 !important;
 }
 
-.usage-item {
+.theme-ghiblio-wrapper .usage-item {
   border-bottom: 1px solid rgba(92, 66, 40, 0.08) !important;
 }
 
-.usage-item-desc {
+.theme-ghiblio-wrapper .usage-item-desc {
   color: #5c4228 !important;
   font-weight: 700 !important;
 }
 
-.usage-item-desc span {
+.theme-ghiblio-wrapper .usage-item-desc span {
   color: #332719 !important;
 }
 
-.usage-item-date {
+.theme-ghiblio-wrapper .usage-item-date {
   color: #a48a66 !important;
 }
 
-.usage-item-amount.positive {
+.theme-ghiblio-wrapper .usage-item-amount.positive {
   color: #78a65a !important;
 }
 
-.usage-item-amount.negative {
+.theme-ghiblio-wrapper .usage-item-amount.negative {
   color: #d97732 !important;
 }
 
 /* Invitation section overrides */
-.invite-card {
+.theme-ghiblio-wrapper .invite-card {
   background: #fffaf0 !important;
   border: 1.5px solid #ffedd5 !important;
   border-radius: 16px !important;
 }
 
-.invite-card-title {
+.theme-ghiblio-wrapper .invite-card-title {
   color: #332719 !important;
   font-weight: 900 !important;
 }
 
-.invite-card-desc {
+.theme-ghiblio-wrapper .invite-card-desc {
   color: #7a6346 !important;
 }
 
-.invite-card-highlight {
+.theme-ghiblio-wrapper .invite-card-highlight {
   color: #d97732 !important;
   font-weight: 900 !important;
 }
 
-.invite-codes-title {
+.theme-ghiblio-wrapper .invite-codes-title {
   color: #332719 !important;
   font-weight: 900 !important;
 }
 
-.invite-codes-refresh {
+.theme-ghiblio-wrapper .invite-codes-refresh {
   color: #d97732 !important;
   font-weight: 700 !important;
 }
 
-.invite-code-item {
+.theme-ghiblio-wrapper .invite-code-item {
   border-bottom: 1px solid rgba(92, 66, 40, 0.08) !important;
 }
 
-.invite-code-text {
+.theme-ghiblio-wrapper .invite-code-text {
   color: #332719 !important;
   font-weight: 900 !important;
 }
 
-.invite-code-meta {
+.theme-ghiblio-wrapper .invite-code-meta {
   color: #a48a66 !important;
 }
 
-.invite-code-copy {
+.theme-ghiblio-wrapper .invite-code-copy {
   background: rgba(255, 255, 255, 0.6) !important;
   border: 1.5px solid rgba(92, 66, 40, 0.15) !important;
   color: #7a6346 !important;
@@ -2289,93 +2289,93 @@
   transition: all 0.2s !important;
 }
 
-.invite-code-copy:hover {
+.theme-ghiblio-wrapper .invite-code-copy:hover {
   background: #ffffff !important;
   border-color: #d97732 !important;
   color: #d97732 !important;
 }
 
 /* Close dialog close icon button */
-.settings-card .icon-btn {
+.theme-ghiblio-wrapper .settings-card .icon-btn {
   color: #a48a66 !important;
   font-size: 24px !important;
   font-weight: 400 !important;
   transition: color 0.15s !important;
 }
 
-.settings-card .icon-btn:hover {
+.theme-ghiblio-wrapper .settings-card .icon-btn:hover {
   color: #d97732 !important;
   background: transparent !important;
 }
 
 /* General subpage view blocks */
-.general-section-title {
+.theme-ghiblio-wrapper .general-section-title {
   color: #332719 !important;
   font-weight: 900 !important;
 }
 
-.general-row {
+.theme-ghiblio-wrapper .general-row {
   background: rgba(255, 255, 255, 0.4) !important;
   border: 1px solid rgba(92, 66, 40, 0.08) !important;
   border-radius: 12px !important;
   transition: all 0.2s !important;
 }
 
-.general-row:hover {
+.theme-ghiblio-wrapper .general-row:hover {
   background: rgba(255, 255, 255, 0.75) !important;
   border-color: rgba(92, 66, 40, 0.15) !important;
 }
 
-.general-row-label {
+.theme-ghiblio-wrapper .general-row-label {
   color: #5c4228 !important;
   font-weight: 700 !important;
 }
 
-.general-row-value {
+.theme-ghiblio-wrapper .general-row-value {
   color: #7a6346 !important;
 }
 
 /* Scrollbars overrides in settings content */
-.settings-content {
+.theme-ghiblio-wrapper .settings-content {
   scrollbar-width: thin !important;
   scrollbar-color: rgba(92, 66, 40, 0.25) transparent !important;
 }
 
-.settings-content::-webkit-scrollbar {
+.theme-ghiblio-wrapper .settings-content::-webkit-scrollbar {
   display: block !important;
   width: 5px !important;
 }
 
-.settings-content::-webkit-scrollbar-track {
+.theme-ghiblio-wrapper .settings-content::-webkit-scrollbar-track {
   background: transparent !important;
 }
 
-.settings-content::-webkit-scrollbar-thumb {
+.theme-ghiblio-wrapper .settings-content::-webkit-scrollbar-thumb {
   background: rgba(92, 66, 40, 0.25) !important;
   border-radius: 99px !important;
 }
 
-.settings-content::-webkit-scrollbar-thumb:hover {
+.theme-ghiblio-wrapper .settings-content::-webkit-scrollbar-thumb:hover {
   background: rgba(92, 66, 40, 0.45) !important;
 }
 
 /* Mobile responsive sidebar rules for Ghiblio theme */
 @media (max-width: 600px) {
-  .settings-sidebar {
+  .theme-ghiblio-wrapper .settings-sidebar {
     border-right: none !important;
     border-bottom: 1.5px solid rgba(92, 66, 40, 0.1) !important;
   }
-  .settings-nav-item {
+  .theme-ghiblio-wrapper .settings-nav-item {
     border-radius: 8px !important;
   }
 }
 
 /* Layout min-height overrides to prevent empty height stretching */
-.settings-layout {
+.theme-ghiblio-wrapper .settings-layout {
   min-height: 360px !important;
 }
 
-.settings-content {
+.theme-ghiblio-wrapper .settings-content {
   max-height: 52vh !important;
 }
 

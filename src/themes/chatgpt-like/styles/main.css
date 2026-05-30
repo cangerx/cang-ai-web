@@ -907,7 +907,9 @@
   background: rgba(16, 163, 127, 0.2) !important;
 }
 
-.theme-chatgpt-like-wrapper .settings-foot .black-btn {
+.theme-chatgpt-like-wrapper .settings-foot .black-btn,
+.theme-chatgpt-like-wrapper .dist-apply-card .black-btn,
+.theme-chatgpt-like-wrapper .recharge-card .black-btn {
   background: linear-gradient(135deg, #10a37f, #0d8366) !important;
   box-shadow: 0 4px 16px rgba(16, 163, 127, 0.25) !important;
   color: #ffffff !important;
@@ -916,7 +918,9 @@
   transition: all 0.2s ease !important;
 }
 
-.theme-chatgpt-like-wrapper .settings-foot .black-btn:hover {
+.theme-chatgpt-like-wrapper .settings-foot .black-btn:hover,
+.theme-chatgpt-like-wrapper .dist-apply-card .black-btn:hover,
+.theme-chatgpt-like-wrapper .recharge-card .black-btn:hover {
   background: linear-gradient(135deg, #12b78f, #0e9473) !important;
   transform: translateY(-1px) !important;
 }
